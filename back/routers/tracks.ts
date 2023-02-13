@@ -1,5 +1,6 @@
 import express from "express";
 import Track from "../models/Track";
+import Album from "../models/Album";
 import {TrackWithoutId} from "../types";
 
 const tracksRouter = express.Router();
@@ -30,6 +31,11 @@ tracksRouter.get('/', async (req, res) => {
     if (req.query.album) {
       const tracksByAlbum = await Track.find({album: req.query.album});
       return res.send(tracksByAlbum);
+    } else if (req.query.artist) {
+      const albums = await Album.find({"artist": req.query.artist}).populate("artist");
+      const tracks = albums.map(album => album._id);
+      const tracksByArtist = await Track.find({"album": {$in: tracks}});
+      return res.send(tracksByArtist);
     } else {
       const tracks = await Track.find();
       return res.send(tracks);
