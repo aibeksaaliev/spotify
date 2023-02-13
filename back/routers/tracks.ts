@@ -25,6 +25,18 @@ tracksRouter.post('/', async (req, res) => {
   }
 });
 
-
+tracksRouter.get('/', async (req, res) => {
+  try {
+    if (req.query.album) {
+      const tracksByAlbum = await Track.find({album: req.query.album});
+      return res.send(tracksByAlbum);
+    } else {
+      const tracks = await Track.find();
+      return res.send(tracks);
+    }
+  } catch {
+    return res.sendStatus(500);
+  }
+});
 
 export default tracksRouter;
