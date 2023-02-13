@@ -27,4 +27,18 @@ albumsRouter.post('/', imagesUpload.single('cover'), async (req, res) => {
   }
 });
 
+albumsRouter.get('/', async (req, res) => {
+  try {
+    if (req.query.artist) {
+      const albumsByArtist = await Album.find({artist: req.query.artist});
+      return res.send(albumsByArtist);
+    } else {
+      const albums = await Album.find();
+      return res.send(albums);
+    }
+  } catch {
+    return res.sendStatus(500);
+  }
+});
+
 export default albumsRouter;
