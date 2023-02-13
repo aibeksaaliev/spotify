@@ -41,4 +41,15 @@ albumsRouter.get('/', async (req, res) => {
   }
 });
 
+albumsRouter.get('/:id', async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const albumById = await Album.findById(id).populate('artist');
+    return res.send(albumById);
+  } catch {
+    return res.sendStatus(500);
+  }
+});
+
 export default albumsRouter;
