@@ -16,7 +16,10 @@ const TrackSchema = new Schema({
       message: "Album does not exist"
     }
   },
-  duration: String
+  duration: {
+    type: String,
+    required: true
+  }
 });
 
 const Track = mongoose.model('Track', TrackSchema);
