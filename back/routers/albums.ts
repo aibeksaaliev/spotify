@@ -1,11 +1,11 @@
 import express from "express";
 import Album from "../models/Album";
-import {imagesUpload} from "../multer";
+import {coversUpload} from "../multer";
 import {AlbumWithoutId} from "../types";
 
 const albumsRouter = express.Router();
 
-albumsRouter.post('/', imagesUpload.single('cover'), async (req, res) => {
+albumsRouter.post('/', coversUpload.single('cover'), async (req, res) => {
   try {
     const albumData: AlbumWithoutId = {
       title: req.body.title,

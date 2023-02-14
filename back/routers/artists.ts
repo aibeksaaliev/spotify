@@ -1,11 +1,11 @@
 import express from "express";
 import Artist from "../models/Artist";
-import {imagesUpload} from "../multer";
+import {photosUpload} from "../multer";
 import {ArtistWithoutId} from "../types";
 
 const artistsRouter = express.Router();
 
-artistsRouter.post('/', imagesUpload.single('photo'), async (req, res) => {
+artistsRouter.post('/', photosUpload.single('photo'), async (req, res) => {
   try {
     const artistData: ArtistWithoutId = {
       name: req.body.name,
