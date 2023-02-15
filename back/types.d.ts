@@ -25,3 +25,9 @@ export interface Track {
 }
 
 export type TrackWithoutId = Omit<Track, "id">;
+
+export interface IUser {
+  username: string;
+  password: string;
+  token: string;
+}
