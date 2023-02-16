@@ -1,3 +1,5 @@
+import {ObjectId} from "mongoose";
+
 export interface Artist {
   id: string;
   name: string;
@@ -10,7 +12,7 @@ export type ArtistWithoutId = Omit<Artist, "id">;
 export interface Album {
   id: string;
   title: string;
-  artist: string;
+  artist: ObjectId;
   releaseYear: number;
   cover: string | null;
 }
@@ -33,7 +35,7 @@ export interface IUser {
 }
 
 export interface ITrackHistory {
-  user: string;
-  track: string;
-  datetime: string;
+  user: ObjectId;
+  track: ObjectId;
+  datetime: Date;
 }
