@@ -23,7 +23,7 @@ export interface Track {
   id: string;
   title: string;
   album: string;
-  duration: string | null;
+  duration: string;
 }
 
 export type TrackWithoutId = Omit<Track, "id">;
