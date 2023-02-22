@@ -32,17 +32,17 @@ const run = async () => {
     releaseYear: 1993,
     cover: "covers/zooropa.jpg"
   }, {
-    name: "The Joshua Tree",
+    title: "The Joshua Tree",
     artist: artist1._id,
     releaseYear: 1987,
     cover: "covers/the_joshua_tree.png",
   }, {
-    name: "Meteora",
+    title: "Meteora",
     artist: artist2._id,
     releaseYear: 2003,
     cover: "covers/meteora.jpg"
   }, {
-    name: "Minutes to Midnight",
+    title: "Minutes to Midnight",
     artist: artist2._id,
     releaseYear: 2007,
     cover: "covers/minutes_to_midnight.jpg"
