@@ -28,13 +28,10 @@ const ArtistCard: React.FC<Props> = ({artist}) => {
           <Typography gutterBottom variant="h5" component="h2">
             {artist.name}
           </Typography>
-          <Typography>
-            {artist.info}
-          </Typography>
         </CardContent>
         <CardActions>
           <Button size="small">View</Button>
-          <Button size="small">Edit</Button>
+          <Button size="small" disabled>Edit</Button>
         </CardActions>
       </Card>
     </Grid>
