@@ -19,7 +19,7 @@ const AlbumSchema = new Schema<AlbumWithoutId>({
   },
   releaseYear: {
     type: Number,
-    required: true
+    required: true,
   },
   cover: String
 });
