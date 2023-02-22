@@ -1,21 +1,18 @@
 import React from 'react';
 import {Button, Card, CardActions, CardContent, CardMedia, Grid} from "@mui/material";
 import Typography from "@mui/material/Typography";
-import {ArtistType} from "../../types";
+import {AlbumType} from "../../types";
 import {apiUrl} from "../../constants";
-import {useNavigate} from "react-router-dom";
 
 interface Props {
-  artist: ArtistType;
+  album: AlbumType;
 }
 
-const ArtistCard: React.FC<Props> = ({artist}) => {
-  const navigate = useNavigate();
-
+const AlbumCard: React.FC<Props> = ({album}) => {
   let image = "";
 
-  if (artist.photo) {
-    image = apiUrl + artist.photo;
+  if (album.cover) {
+    image = apiUrl + album.cover;
   }
 
   return (
@@ -29,11 +26,12 @@ const ArtistCard: React.FC<Props> = ({artist}) => {
         />
         <CardContent sx={{ flexGrow: 1 }}>
           <Typography gutterBottom variant="h5" component="h2">
-            {artist.name}
+            {album.title}
           </Typography>
+          <Typography>{album.releaseYear}</Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={() => navigate('/artist/' + artist._id)}>View</Button>
+          <Button size="small">View</Button>
           <Button size="small" disabled>Edit</Button>
         </CardActions>
       </Card>
@@ -41,4 +39,4 @@ const ArtistCard: React.FC<Props> = ({artist}) => {
   );
 };
 
-export default ArtistCard;
+export default AlbumCard;

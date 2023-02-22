@@ -30,7 +30,7 @@ albumsRouter.post('/', coversUpload.single('cover'), async (req, res) => {
 albumsRouter.get('/', async (req, res) => {
   try {
     if (req.query.artist) {
-      const albumsByArtist = await Album.find({artist: req.query.artist});
+      const albumsByArtist = await Album.find({artist: req.query.artist}).sort({releaseYear: -1});
       return res.send(albumsByArtist);
     } else {
       const albums = await Album.find();
