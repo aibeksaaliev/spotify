@@ -1,2 +1,10 @@
 photos/*
 covers/*
+
+!photos/LP.jpg
+!photos/U2.jpg
+
+!covers/meteora.jpg
+!covers/minutes_to_midnight.jpg
+!covers/the_joshua_tree.png
+!covers/zooropa.jpg
