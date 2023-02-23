@@ -3,6 +3,7 @@ import Album from "../models/Album";
 import {coversUpload} from "../multer";
 import {AlbumWithoutId} from "../types";
 import Artist from "../models/Artist";
+import mongoose from "mongoose";
 
 const albumsRouter = express.Router();
 
@@ -31,7 +32,13 @@ albumsRouter.post('/', coversUpload.single('cover'), async (req, res) => {
 albumsRouter.get('/', async (req, res) => {
   try {
     if (req.query.artist) {
-      const albumsByArtist = await Album.find({artist: req.query.artist}).sort({releaseYear: -1});
+      const albumsByArtist = await Album.aggregate([
+        {$match: {artist: new mongoose.Types.ObjectId(req.query.artist as string)}},
+        {$lookup: {from: "tracks", localField: "_id", foreignField: "album", as: "tracks"}},
+        {$addFields: {tracksAmount: {$size: "$tracks"}}},
+        {$project: {_id: 1, title: 1, artist: 1, releaseYear: 1, cover: 1, tracksAmount: 1}},
+        {$sort: {releaseYear: -1}}
+      ]);
       const artist = await Artist.findById(req.query.artist).select('name');
       return res.send({albums: albumsByArtist, artist: artist});
     } else {

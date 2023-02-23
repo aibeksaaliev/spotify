@@ -12,6 +12,7 @@ export interface AlbumType {
   releaseYear: number;
   cover: string;
   artistName: string;
+  tracksAmount: number;
 }
 
 export type AlbumTypeExtended = Omit<AlbumType, "artist"> & {artist: ArtistType};
