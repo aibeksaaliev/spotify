@@ -4,6 +4,7 @@ import {Route, Routes} from "react-router-dom";
 import Artists from "./containers/Artists";
 import Albums from "./containers/Albums";
 import Tracks from "./containers/Tracks";
+import Error from "./components/Error/Error";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<Artists/>}/>
           <Route path="/artist/:id" element={<Albums/>}/>
           <Route path="/album/:id" element={<Tracks/>}/>
+          <Route path="/*" element={<Error/>}/>
         </Routes>
       </Layout>
     </>
