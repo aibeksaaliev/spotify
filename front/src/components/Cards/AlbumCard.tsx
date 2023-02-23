@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import {AlbumType} from "../../types";
 import {apiUrl} from "../../constants";
 import {useNavigate} from "react-router-dom";
+import NoImageAvailable from "../../../src/assets/images/no_image_available.jpg";
 
 interface Props {
   album: AlbumType;
@@ -11,7 +12,8 @@ interface Props {
 
 const AlbumCard: React.FC<Props> = ({album}) => {
   const navigate = useNavigate();
-  let image = "";
+
+  let image = NoImageAvailable;
 
   if (album.cover) {
     image = apiUrl + album.cover;

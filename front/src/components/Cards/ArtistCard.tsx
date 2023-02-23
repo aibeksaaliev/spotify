@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import {ArtistType} from "../../types";
 import {apiUrl} from "../../constants";
 import {useNavigate} from "react-router-dom";
+import NoImageAvailable from "../../../src/assets/images/no_image_available.jpg";
 
 interface Props {
   artist: ArtistType;
@@ -12,7 +13,7 @@ interface Props {
 const ArtistCard: React.FC<Props> = ({artist}) => {
   const navigate = useNavigate();
 
-  let image = "";
+  let image = NoImageAvailable;
 
   if (artist.photo) {
     image = apiUrl + artist.photo;
