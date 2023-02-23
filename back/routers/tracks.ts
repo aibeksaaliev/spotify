@@ -29,8 +29,9 @@ tracksRouter.post('/', async (req, res) => {
 tracksRouter.get('/', async (req, res) => {
   try {
     if (req.query.album) {
-      const tracksByAlbum = await Track.find({album: req.query.album});
-      return res.send(tracksByAlbum);
+      const tracksByAlbum = await Track.find({album: req.query.album}).sort({number: +1});
+      const albumInfo = await Album.findById(req.query.album).populate('artist');
+      return res.send({tracks: tracksByAlbum, albumInfo: albumInfo});
     } else if (req.query.artist) {
       const albums = await Album.find({"artist": req.query.artist}).populate("artist");
       const tracks = albums.map(album => album._id);

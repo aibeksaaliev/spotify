@@ -1,16 +1,16 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store";
-import {AlbumType} from "../../types";
+import {ArtistAlbumsType} from "../../types";
 import {getArtistAlbums} from "./albumsThunks";
 
 interface AlbumsState {
-  albums: AlbumType[];
+  albums: ArtistAlbumsType | null;
   albumsLoading: boolean;
   albumsError: boolean;
 }
 
 const initialState: AlbumsState = {
-  albums: [],
+  albums: null,
   albumsLoading: false,
   albumsError: false
 };

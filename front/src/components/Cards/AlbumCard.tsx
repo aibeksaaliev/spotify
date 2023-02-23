@@ -33,7 +33,7 @@ const AlbumCard: React.FC<Props> = ({album}) => {
           <Typography>{album.releaseYear}</Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={() => navigate('/album/' + album._id)}>View 2</Button>
+          <Button size="small" onClick={() => navigate('/album/' + album._id)}>View</Button>
           <Button size="small" disabled>Edit</Button>
         </CardActions>
       </Card>

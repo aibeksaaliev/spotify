@@ -11,7 +11,19 @@ export interface AlbumType {
   artist: string;
   releaseYear: number;
   cover: string;
+  artistName: string;
 }
+
+export type AlbumTypeExtended = Omit<AlbumType, "artist"> & {artist: ArtistType};
+
+export interface ArtistAlbumsType {
+  albums: AlbumType [],
+  artist: {
+    name: string;
+    _id: string;
+  };
+}
+
 
 export interface TrackType {
   _id: string;
@@ -19,4 +31,9 @@ export interface TrackType {
   album: string;
   duration: string;
   number: number;
+}
+
+export interface AlbumTracksType {
+  tracks: TrackType [],
+  albumInfo: AlbumTypeExtended
 }

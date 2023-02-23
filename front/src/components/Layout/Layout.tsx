@@ -6,6 +6,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import AlbumIcon from '@mui/icons-material/Album';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {Link} from "react-router-dom";
 
 const Layout: React.FC<PropsWithChildren> = ({children}) => {
 
@@ -13,19 +14,19 @@ const Layout: React.FC<PropsWithChildren> = ({children}) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
+      <CssBaseline/>
       <AppBar position="relative">
         <Toolbar>
-          <AlbumIcon sx={{ mr: 2 }} />
-          <Typography variant="h6" color="inherit" noWrap>
-            Spotify
-          </Typography>
+          <Link to="/" style={{textDecoration: "none", color: "inherit", display: "flex", alignItems: "center"}}>
+          <AlbumIcon sx={{mr: 2}}/>
+              Spotify
+          </Link>
         </Toolbar>
       </AppBar>
       <main>
         {children}
       </main>
-      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
+      <Box sx={{bgcolor: 'background.paper', p: 6}} component="footer">
         <Typography variant="h6" align="center" gutterBottom>
           Footer
         </Typography>

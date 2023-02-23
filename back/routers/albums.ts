@@ -2,6 +2,7 @@ import express from "express";
 import Album from "../models/Album";
 import {coversUpload} from "../multer";
 import {AlbumWithoutId} from "../types";
+import Artist from "../models/Artist";
 
 const albumsRouter = express.Router();
 
@@ -31,7 +32,8 @@ albumsRouter.get('/', async (req, res) => {
   try {
     if (req.query.artist) {
       const albumsByArtist = await Album.find({artist: req.query.artist}).sort({releaseYear: -1});
-      return res.send(albumsByArtist);
+      const artist = await Artist.findById(req.query.artist).select('name');
+      return res.send({albums: albumsByArtist, artist: artist});
     } else {
       const albums = await Album.find();
       return res.send(albums);

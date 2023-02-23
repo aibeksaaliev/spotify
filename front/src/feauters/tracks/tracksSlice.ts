@@ -1,16 +1,16 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store";
-import {TrackType} from "../../types";
+import {AlbumTracksType} from "../../types";
 import {getAlbumTracks} from "./tracksThunks";
 
 interface TracksState {
-  tracks: TrackType[];
+  tracks: AlbumTracksType | null;
   tracksLoading: boolean;
   tracksError: boolean;
 }
 
 const initialState: TracksState = {
-  tracks: [],
+  tracks: null,
   tracksLoading: false,
   tracksError: false
 };

@@ -6,6 +6,7 @@ import {selectTracks, selectTracksLoading} from "../feauters/tracks/tracksSlice"
 import {useParams} from "react-router-dom";
 import {getAlbumTracks} from "../feauters/tracks/tracksThunks";
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 const Tracks = () => {
   const dispatch = useAppDispatch();
@@ -23,7 +24,7 @@ const Tracks = () => {
     </Box>
   ) : (
     <List>
-      {tracksData.map(track => {
+      {tracksData?.tracks.map(track => {
         return <TrackCard key={track._id} track={track}/>
       })}
     </List>
@@ -32,6 +33,11 @@ const Tracks = () => {
 
   return (
     <Container sx={{py:8}} maxWidth="md">
+      <Box sx={{display: tracksData?.albumInfo ? "block" : "none"}}>
+        <Typography variant="h3" sx={{mb: 2}}>
+          {tracksData?.albumInfo.artist.name} - {tracksData?.albumInfo.title} ({tracksData?.albumInfo.releaseYear})
+        </Typography>
+      </Box>
       <List>
         {content}
       </List>
