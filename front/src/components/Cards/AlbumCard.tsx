@@ -3,12 +3,14 @@ import {Button, Card, CardActions, CardContent, CardMedia, Grid} from "@mui/mate
 import Typography from "@mui/material/Typography";
 import {AlbumType} from "../../types";
 import {apiUrl} from "../../constants";
+import {useNavigate} from "react-router-dom";
 
 interface Props {
   album: AlbumType;
 }
 
 const AlbumCard: React.FC<Props> = ({album}) => {
+  const navigate = useNavigate();
   let image = "";
 
   if (album.cover) {
@@ -31,7 +33,7 @@ const AlbumCard: React.FC<Props> = ({album}) => {
           <Typography>{album.releaseYear}</Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">View</Button>
+          <Button size="small" onClick={() => navigate('/album/' + album._id)}>View 2</Button>
           <Button size="small" disabled>Edit</Button>
         </CardActions>
       </Card>
