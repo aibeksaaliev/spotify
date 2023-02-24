@@ -24,9 +24,9 @@ const Tracks = () => {
     </Box>
   ) : (
     <List>
-      {tracksData?.tracks.map(track => {
+      {tracksData?.tracks.length !== 0 ? tracksData?.tracks.map(track => {
         return <TrackCard key={track._id} track={track}/>
-      })}
+      }) : (<Typography component="div" sx={{margin: "auto", mt: 5}}>No tracks yet</Typography>)}
     </List>
   )
 

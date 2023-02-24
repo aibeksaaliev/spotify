@@ -1,7 +1,7 @@
 export interface ArtistType {
   _id: string;
   name: string;
-  photo: string;
+  photo: string | null;
   info: string;
 }
 
@@ -10,7 +10,7 @@ export interface AlbumType {
   title: string;
   artist: string;
   releaseYear: number;
-  cover: string;
+  cover: string | null;
   artistName: string;
   tracksAmount: number;
 }

@@ -24,9 +24,9 @@ const Albums = () => {
     </Box>
   ) : (
     <Grid container spacing={4}>
-      {albumsData?.albums.map(album => {
+      {albumsData?.albums.length !== 0 ? albumsData?.albums.map(album => {
         return <AlbumCard key={album._id} album={album}/>
-      })}
+      }) : (<Typography component="div" sx={{margin: "auto", mt: 5}}>No albums yet</Typography>)}
     </Grid>
   )
 
