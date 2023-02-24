@@ -12,8 +12,8 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Artists/>}/>
-          <Route path="/artist/:id" element={<Albums/>}/>
-          <Route path="/album/:id" element={<Tracks/>}/>
+          <Route path="/artists/:id" element={<Albums/>}/>
+          <Route path="/albums/:id" element={<Tracks/>}/>
           <Route path="/*" element={<Error/>}/>
         </Routes>
       </Layout>

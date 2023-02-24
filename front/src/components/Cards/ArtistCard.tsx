@@ -34,7 +34,7 @@ const ArtistCard: React.FC<Props> = ({artist}) => {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={() => navigate('/artist/' + artist._id)}>View</Button>
+          <Button size="small" onClick={() => navigate('/artists/' + artist._id)}>View</Button>
           <Button size="small" disabled>Edit</Button>
         </CardActions>
       </Card>
