@@ -7,8 +7,13 @@ import Typography from '@mui/material/Typography';
 import AlbumIcon from '@mui/icons-material/Album';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {Link} from "react-router-dom";
+import AnonymousMenu from "../UI/AppToolbar/AnonymousMenu";
+import UsersMenu from "../UI/AppToolbar/UsersMenu";
+import {useAppSelector} from "../../app/hooks";
+import {selectUser} from "../../feauters/users/usersSlice";
 
 const Layout: React.FC<PropsWithChildren> = ({children}) => {
+  const user = useAppSelector(selectUser);
 
   const theme = createTheme({
     palette: {
@@ -29,11 +34,12 @@ const Layout: React.FC<PropsWithChildren> = ({children}) => {
     <ThemeProvider theme={theme}>
       <CssBaseline/>
       <AppBar position="relative">
-        <Toolbar>
+        <Toolbar sx={{display: "flex", justifyContent: "space-between"}}>
           <Link to="/" style={{textDecoration: "none", color: "inherit", display: "flex", alignItems: "center"}}>
           <AlbumIcon sx={{mr: 2}}/>
               Spotify
           </Link>
+          {user ? (<UsersMenu user={user}/>) : (<AnonymousMenu/>)}
         </Toolbar>
       </AppBar>
       <main>
