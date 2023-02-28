@@ -10,7 +10,9 @@ tracksRouter.post('/', async (req, res) => {
     const trackData: TrackWithoutId = {
       title: req.body.title,
       album: req.body.album,
-      duration: req.body.duration
+      duration: req.body.duration,
+      number: req.body.number,
+      videoId: req.body.videoId ? req.body.videoId : null,
     };
 
     const track = new Track(trackData);

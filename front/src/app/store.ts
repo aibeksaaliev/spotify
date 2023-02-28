@@ -18,8 +18,8 @@ const rootReducer = combineReducers({
   artists: artistsReducer,
   albums: albumsReducer,
   tracks: tracksReducer,
+  trackHistory: trackHistoryReducer,
   users: persistReducer(usersPersistConfig, usersReducer),
-  trackHistory: trackHistoryReducer
 });
 
 export const store = configureStore({
@@ -30,6 +30,7 @@ export const store = configureStore({
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
     }),
+
 });
 
 export const persistor = persistStore(store);

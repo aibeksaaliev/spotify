@@ -6,6 +6,7 @@ import {TrackType} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectUser} from "../../feauters/users/usersSlice";
 import {submitTrackHistory} from "../../feauters/trackHistory/trackHistoryThunks";
+import {getYouTubeUrl} from "../../feauters/tracks/tracksSlice";
 
 interface Props {
   track: TrackType;
@@ -17,6 +18,7 @@ const TrackCard: React.FC<Props> = ({track}) => {
 
   const playSong = async () => {
     await dispatch(submitTrackHistory(track._id));
+    dispatch(getYouTubeUrl(track.videoId));
   };
 
   return (

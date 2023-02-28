@@ -9,7 +9,7 @@ export const submitTrackHistory = createAsyncThunk<void, string, {state: RootSta
     const user = getState().users.user;
 
     if (user) {
-      return axiosApi.post('/track_history', {track: trackID}, {headers: {"Authorization": user.token}});
+      await axiosApi.post('/track_history', {track: trackID}, {headers: {"Authorization": user.token}});
     }
   }
 );

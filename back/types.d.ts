@@ -24,6 +24,8 @@ export interface Track {
   title: string;
   album: string;
   duration: string;
+  number: number;
+  videoId: string;
 }
 
 export type TrackWithoutId = Omit<Track, "id">;

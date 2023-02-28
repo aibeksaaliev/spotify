@@ -23,7 +23,8 @@ const TrackSchema = new Schema({
   number : {
     type: Number,
     required: true
-  }
+  },
+  videoId: String
 });
 
 const Track = mongoose.model('Track', TrackSchema);

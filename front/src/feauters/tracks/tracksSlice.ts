@@ -7,18 +7,24 @@ interface TracksState {
   tracks: AlbumTracksType | null;
   tracksLoading: boolean;
   tracksError: boolean;
+  videoId: string | null;
 }
 
 const initialState: TracksState = {
   tracks: null,
   tracksLoading: false,
-  tracksError: false
+  tracksError: false,
+  videoId: null,
 };
 
 export const tracksSlice = createSlice({
   name: "tracks",
   initialState,
-  reducers: {},
+  reducers: {
+    getYouTubeUrl: (state, action) => {
+      state.videoId = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getAlbumTracks.pending, (state) => {
       state.tracksLoading = true;
@@ -34,5 +40,8 @@ export const tracksSlice = createSlice({
 });
 
 export const tracksReducer = tracksSlice.reducer;
+
+export const {getYouTubeUrl} = tracksSlice.actions;
 export const selectTracks = (state: RootState) => state.tracks.tracks;
 export const selectTracksLoading = (state: RootState) => state.tracks.tracksLoading;
+export const selectYouTubeVideoId = (state: RootState) => state.tracks.videoId;

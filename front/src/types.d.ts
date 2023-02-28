@@ -32,6 +32,7 @@ export interface TrackType {
   album: string;
   duration: string;
   number: number;
+  videoId: string | null;
 }
 
 export interface AlbumTracksType {
