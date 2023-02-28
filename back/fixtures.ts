@@ -3,18 +3,27 @@ import config from "./config";
 import Artist from "./models/Artist";
 import Album from "./models/Album";
 import Track from "./models/Track";
+import User from "./models/User";
 
 const run = async () => {
   await mongoose.connect(config.db);
   const db = mongoose.connection;
 
   try {
+    await db.dropCollection('users');
     await db.dropCollection('artists');
     await db.dropCollection('albums');
     await db.dropCollection('tracks');
+    await db.dropCollection('trackhistories');
   } catch (e) {
     console.log("Collections were not present, skipping drop...");
   }
+
+  await User.create({
+    username: "user",
+    password: "password",
+    token: "token"
+  });
 
   const [artist1, artist2] = await Artist.create({
     name: "U2",
