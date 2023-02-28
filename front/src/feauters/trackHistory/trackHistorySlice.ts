@@ -36,4 +36,3 @@ export const TrackHistorySlice = createSlice({
 export const trackHistoryReducer = TrackHistorySlice.reducer;
 export const selectTrackHistory = (state: RootState) => state.trackHistory.history;
 export const selectTrackHistoryLoading = (state: RootState) => state.trackHistory.historyLoading;
-export const selectTrackHistoryError = (state: RootState) => state.trackHistory.historyError;

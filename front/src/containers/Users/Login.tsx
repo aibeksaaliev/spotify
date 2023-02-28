@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { LoginMutation } from '../../types';
-import { Alert, Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
+import React, {useState} from 'react';
+import {Link as RouterLink, useNavigate} from 'react-router-dom';
+import {LoginMutation} from '../../types';
+import {Alert, Avatar, Box, Container, Grid, Link, TextField, Typography} from '@mui/material';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectLoginError } from '../../feauters/users/usersSlice';
-import { login } from '../../feauters/users/usersThunks';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {selectLoginError, selectLoginLoading} from '../../feauters/users/usersSlice';
+import {login} from '../../feauters/users/usersThunks';
+import {LoadingButton} from "@mui/lab";
 
 const Login = () => {
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectLoginError);
+  const loading = useAppSelector(selectLoginLoading);
   const navigate = useNavigate();
 
   const [state, setState] = useState<LoginMutation>({
@@ -75,14 +77,16 @@ const Login = () => {
               />
             </Grid>
           </Grid>
-          <Button
+          <LoadingButton
+            loading={loading}
+            disabled={loading}
             type="submit"
             fullWidth
             variant="contained"
             sx={{mt: 3, mb: 2}}
           >
             Sign In
-          </Button>
+          </LoadingButton>
           <Grid container justifyContent="flex-end">
             <Grid item>
               <Link component={RouterLink} to="/register" variant="body2">
