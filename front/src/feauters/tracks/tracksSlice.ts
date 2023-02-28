@@ -24,6 +24,9 @@ export const tracksSlice = createSlice({
     getYouTubeUrl: (state, action) => {
       state.videoId = action.payload;
     },
+    clearYouTubeUrl: (state) => {
+      state.videoId = null;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getAlbumTracks.pending, (state) => {
@@ -40,8 +43,7 @@ export const tracksSlice = createSlice({
 });
 
 export const tracksReducer = tracksSlice.reducer;
-
-export const {getYouTubeUrl} = tracksSlice.actions;
+export const {getYouTubeUrl, clearYouTubeUrl} = tracksSlice.actions;
 export const selectTracks = (state: RootState) => state.tracks.tracks;
 export const selectTracksLoading = (state: RootState) => state.tracks.tracksLoading;
 export const selectYouTubeVideoId = (state: RootState) => state.tracks.videoId;
