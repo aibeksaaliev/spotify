@@ -7,6 +7,7 @@ import Tracks from "./containers/Tracks";
 import Error from "./components/Error/Error";
 import Register from "./containers/Users/Register";
 import Login from "./containers/Users/Login";
+import TrackHistory from "./containers/TrackHistory";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/albums/:id" element={<Tracks/>}/>
           <Route path="/register" element={<Register/>}/>
           <Route path="/login" element={<Login/>}/>
+          <Route path="/track_history" element={<TrackHistory/>}/>
           <Route path="/*" element={<Error/>}/>
         </Routes>
       </Layout>

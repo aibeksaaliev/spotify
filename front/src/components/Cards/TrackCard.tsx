@@ -5,7 +5,7 @@ import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import {TrackType} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectUser} from "../../feauters/users/usersSlice";
-import {submitTrackHistory} from "../../feauters/tracks/tracksThunks";
+import {submitTrackHistory} from "../../feauters/trackHistory/trackHistoryThunks";
 
 interface Props {
   track: TrackType;
