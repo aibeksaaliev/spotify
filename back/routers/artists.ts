@@ -37,6 +37,21 @@ artistsRouter.get('/', async (req, res) => {
   }
 });
 
+artistsRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res) => {
+  try {
+    const artist = await Artist.findById(req.params.id);
+
+    if (!artist) {
+      return res.status(404).send({message: "Artist not found"});
+    }
+
+    await artist.updateOne({isPublished: !artist.isPublished});
+    return res.send({message: "Toggled successfully", artist});
+  } catch (e) {
+    return res.status(500);
+  }
+});
+
 artistsRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
   try {
     const artist = await Artist.findById(req.params.id);

@@ -63,6 +63,21 @@ albumsRouter.get('/:id', async (req, res) => {
   }
 });
 
+albumsRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res) => {
+  try {
+    const album = await Album.findById(req.params.id);
+
+    if (!album) {
+      return res.status(404).send({message: "Album not found"});
+    }
+
+    await album.updateOne({isPublished: !album.isPublished});
+    return res.send({message: "Toggled successfully", album});
+  } catch (e) {
+    return res.status(500);
+  }
+});
+
 albumsRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
   try {
     const album = await Album.findById(req.params.id);

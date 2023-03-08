@@ -47,6 +47,21 @@ tracksRouter.get('/', async (req, res) => {
   }
 });
 
+tracksRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, res) => {
+  try {
+    const track = await Track.findById(req.params.id);
+
+    if (!track) {
+      return res.status(404).send({message: "Track not found"});
+    }
+
+    await track.updateOne({isPublished: !track.isPublished});
+    return res.send({message: "Toggled successfully", track});
+  } catch (e) {
+    return res.status(500);
+  }
+})
+
 tracksRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
   try {
     const track = await Track.findById(req.params.id);
