@@ -1,19 +1,17 @@
 import express from "express";
 import Artist from "../models/Artist";
 import {photosUpload} from "../multer";
-import {ArtistWithoutId} from "../types";
+import auth from "../middleware/auth";
 
 const artistsRouter = express.Router();
 
-artistsRouter.post('/', photosUpload.single('photo'), async (req, res) => {
+artistsRouter.post('/', auth, photosUpload.single('photo'), async (req, res) => {
   try {
-    const artistData: ArtistWithoutId = {
+    const artist = await Artist.create({
       name: req.body.name,
       photo: req.file ? req.file.filename : null,
-      info: req.body.info ? req.body.info : null,
-    };
-
-    const artist = new Artist(artistData);
+      info: req.body.info ? req.body.info : null
+    });
 
     try {
       await artist.save();

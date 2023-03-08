@@ -3,19 +3,18 @@ import Album from "../models/Album";
 import {coversUpload} from "../multer";
 import Artist from "../models/Artist";
 import mongoose from "mongoose";
+import auth from "../middleware/auth";
 
 const albumsRouter = express.Router();
 
-albumsRouter.post('/', coversUpload.single('cover'), async (req, res) => {
+albumsRouter.post('/', auth, coversUpload.single('cover'), async (req, res) => {
   try {
-    const albumData = {
+    const album = await Album.create({
       title: req.body.title,
       artist: req.body.artist,
       releaseYear: req.body.releaseYear,
       cover: req.file ? req.file.filename : null
-    };
-
-    const album = new Album(albumData);
+    });
 
     try {
       await album.save();

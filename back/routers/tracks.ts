@@ -1,21 +1,19 @@
 import express from "express";
 import Track from "../models/Track";
 import Album from "../models/Album";
-import {TrackWithoutId} from "../types";
+import auth from "../middleware/auth";
 
 const tracksRouter = express.Router();
 
-tracksRouter.post('/', async (req, res) => {
+tracksRouter.post('/', auth, async (req, res) => {
   try {
-    const trackData: TrackWithoutId = {
+    const track = await Track.create({
       title: req.body.title,
       album: req.body.album,
       duration: req.body.duration,
       number: req.body.number,
       videoId: req.body.videoId ? req.body.videoId : null,
-    };
-
-    const track = new Track(trackData);
+    });
 
     try {
       await track.save();
