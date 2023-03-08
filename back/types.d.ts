@@ -15,6 +15,7 @@ export interface Album {
   artist: ObjectId;
   releaseYear: number;
   cover: string | null;
+  isPublished: boolean;
 }
 
 export type AlbumWithoutId = Omit<Album, "id">;
@@ -34,6 +35,7 @@ export interface IUser {
   username: string;
   password: string;
   token: string;
+  role: string;
 }
 
 export interface ITrackHistory {

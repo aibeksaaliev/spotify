@@ -1,7 +1,6 @@
 import express from "express";
 import Album from "../models/Album";
 import {coversUpload} from "../multer";
-import {AlbumWithoutId} from "../types";
 import Artist from "../models/Artist";
 import mongoose from "mongoose";
 
@@ -9,7 +8,7 @@ const albumsRouter = express.Router();
 
 albumsRouter.post('/', coversUpload.single('cover'), async (req, res) => {
   try {
-    const albumData: AlbumWithoutId = {
+    const albumData = {
       title: req.body.title,
       artist: req.body.artist,
       releaseYear: req.body.releaseYear,

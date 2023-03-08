@@ -21,7 +21,12 @@ const AlbumSchema = new Schema<AlbumWithoutId>({
     type: Number,
     required: true,
   },
-  cover: String
+  cover: String,
+  isPublished: {
+    type: Boolean,
+    required: true,
+    default: false
+  }
 });
 
 const Album = mongoose.model('Album', AlbumSchema);
