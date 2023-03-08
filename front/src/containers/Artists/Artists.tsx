@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 import {CircularProgress, Container, Grid} from "@mui/material";
-import ArtistCard from "../components/Cards/ArtistCard";
-import {useAppDispatch, useAppSelector} from "../app/hooks";
-import {selectArtists, selectArtistsLoading} from "../feauters/artists/artistsSlice";
-import {getArtists} from "../feauters/artists/artistsThunks";
+import ArtistCard from "../../components/Cards/ArtistCard";
+import {useAppDispatch, useAppSelector} from "../../app/hooks";
+import {selectArtists, selectArtistsLoading} from "../../feauters/artists/artistsSlice";
+import {getArtists} from "../../feauters/artists/artistsThunks";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
