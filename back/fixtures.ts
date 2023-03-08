@@ -43,7 +43,7 @@ const run = async () => {
     isPublished: true
   }, {
     name: "Red Hot Chili Peppers",
-    photo: "",
+    photo: "photos/RHCP.jpeg",
     info: "Red Hot Chili Peppers are an American rock band formed in Los Angeles in 1982,[1] comprising vocalist Anthony Kiedis, bassist Flea, drummer Chad Smith, and guitarist John Frusciante. Their music incorporates elements of alternative rock, funk, punk rock, hard rock, hip hop, and psychedelic rock. Their eclectic range has influenced genres such as funk metal,[2] rap metal,[3] rap rock,[4] and nu metal.[5][3] With over 120 million records sold worldwide, Red Hot Chili Peppers are one of the best-selling bands of all time.[6] They hold the records for most number-one singles (15), most cumulative weeks at number one (91) and most top-ten songs (28) on the Billboard Alternative Songs chart.[7] They have won six Grammy Awards, were inducted into the Rock and Roll Hall of Fame in 2012, and in 2022 received a star on the Hollywood Walk of Fame.",
     isPublished: true
   });
@@ -76,7 +76,7 @@ const run = async () => {
     title: "2011 Live EP",
     artist: artist3._id,
     releaseYear: 2012,
-    cover: "",
+    cover: "covers/2011_live_ep.jpeg",
     isPublished: false
   });
 
