@@ -4,6 +4,10 @@ import {coversUpload} from "../multer";
 import Artist from "../models/Artist";
 import mongoose from "mongoose";
 import auth from "../middleware/auth";
+import permit from "../middleware/permit";
+import path from "path";
+import config from "../config";
+import {promises as fs} from "fs";
 
 const albumsRouter = express.Router();
 
@@ -56,6 +60,24 @@ albumsRouter.get('/:id', async (req, res) => {
     return res.send(albumById);
   } catch {
     return res.sendStatus(500);
+  }
+});
+
+albumsRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
+  try {
+    const album = await Album.findById(req.params.id);
+
+    if (!album) {
+      return res.status(404).send({message: "Album not found"});
+    }
+
+    const coverPath = path.join(config.publicPath, album.cover as string);
+    await fs.unlink(coverPath);
+
+    await album.deleteOne();
+    return res.send({message: "Deleted successfully"});
+  } catch (e) {
+    return res.status(500);
   }
 });
 

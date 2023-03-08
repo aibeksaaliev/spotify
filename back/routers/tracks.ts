@@ -2,6 +2,7 @@ import express from "express";
 import Track from "../models/Track";
 import Album from "../models/Album";
 import auth from "../middleware/auth";
+import permit from "../middleware/permit";
 
 const tracksRouter = express.Router();
 
@@ -45,5 +46,20 @@ tracksRouter.get('/', async (req, res) => {
     return res.sendStatus(500);
   }
 });
+
+tracksRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
+  try {
+    const track = await Track.findById(req.params.id);
+
+    if (!track) {
+      return res.status(404).send({message: "Track not found"});
+    }
+
+    await track.deleteOne();
+    return res.send({message: "Deleted successfully"});
+  } catch (e) {
+    return res.status(500);
+  }
+})
 
 export default tracksRouter;

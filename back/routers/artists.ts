@@ -2,6 +2,10 @@ import express from "express";
 import Artist from "../models/Artist";
 import {photosUpload} from "../multer";
 import auth from "../middleware/auth";
+import permit from "../middleware/permit";
+import config from "../config";
+import path from "path";
+import {promises as fs} from "fs";
 
 const artistsRouter = express.Router();
 
@@ -33,6 +37,22 @@ artistsRouter.get('/', async (req, res) => {
   }
 });
 
+artistsRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
+  try {
+    const artist = await Artist.findById(req.params.id);
 
+    if (!artist) {
+      return res.status(404).send({message: "Artist not found"});
+    }
+
+    const photoPath = path.join(config.publicPath, artist.photo as string);
+    await fs.unlink(photoPath);
+
+    await artist.deleteOne();
+    return res.send({message: "Deleted successfully"});
+  } catch (e) {
+    return res.status(500);
+  }
+});
 
 export default artistsRouter;
