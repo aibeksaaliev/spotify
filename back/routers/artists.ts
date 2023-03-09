@@ -6,6 +6,7 @@ import permit from "../middleware/permit";
 import config from "../config";
 import path from "path";
 import {promises as fs} from "fs";
+import access, {AnyRequest} from "../middleware/access";
 
 const artistsRouter = express.Router();
 
@@ -28,10 +29,22 @@ artistsRouter.post('/', auth, photosUpload.single('photo'), async (req, res) => 
   }
 });
 
-artistsRouter.get('/', async (req, res) => {
+artistsRouter.get('/', access, async (req, res) => {
   try {
-    const artists = await Artist.find();
-    return res.send(artists);
+    const user = (req as AnyRequest).user;
+
+    if (!user) {
+      const artists = await Artist.find({isPublished: true});
+      return res.send(artists);
+    } else {
+      if (user && user.role === "admin") {
+        const artists = await Artist.find();
+        return res.send(artists);
+      } else {
+        const artists = await Artist.find({isPublished: true});
+        return res.send(artists);
+      }
+    }
   } catch {
     return res.sendStatus(500);
   }

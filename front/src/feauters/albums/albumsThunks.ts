@@ -1,29 +1,24 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import axiosApi from "../../axiosApi";
 import {AlbumMutation, ArtistAlbumsType, ValidationError} from "../../types";
-import {RootState} from "../../app/store";
 import {isAxiosError} from "axios";
 
-export const createAlbum = createAsyncThunk<void, AlbumMutation, {state: RootState, rejectValue: ValidationError}>(
+export const createAlbum = createAsyncThunk<void, AlbumMutation, { rejectValue: ValidationError }>(
   'albums/createOne',
-  async (album, {getState, rejectWithValue}) => {
+  async (album, {rejectWithValue}) => {
     try {
-      const user = getState().users.user;
+      const formData = new FormData();
 
-      if (user) {
-        const formData = new FormData();
+      const keys = Object.keys(album) as (keyof AlbumMutation)[];
 
-        const keys = Object.keys(album) as (keyof AlbumMutation)[];
+      keys.forEach(key => {
+        const value = album[key];
+        if (value !== null) {
+          formData.append(key, value);
+        }
+      });
 
-        keys.forEach(key => {
-          const value = album[key];
-          if (value !== null) {
-            formData.append(key, value);
-          }
-        });
-
-        await axiosApi.post('/albums', formData, {headers: {"Authorization": user.token}});
-      }
+      await axiosApi.post('/albums', formData);
     } catch (e) {
       if (isAxiosError(e) && e.response && e.response.status === 400) {
         return rejectWithValue(e.response.data as ValidationError);
