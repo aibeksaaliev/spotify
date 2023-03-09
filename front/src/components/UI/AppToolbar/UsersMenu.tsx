@@ -39,6 +39,9 @@ const UsersMenu: React.FC<Props> = ({user}) => {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
+        <MenuItem onClick={() => navigate('/add_new_artist')}>Add New Artist</MenuItem>
+        <MenuItem onClick={() => navigate('/add_new_album')}>Add New Album</MenuItem>
+        <MenuItem onClick={() => navigate('/add_new_track')}>Add New Track</MenuItem>
         <MenuItem onClick={() => navigate('/track_history')}>Track History</MenuItem>
         <MenuItem onClick={handleLogout}>Logout</MenuItem>
       </Menu>
