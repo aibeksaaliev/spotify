@@ -21,6 +21,13 @@ export interface AlbumType {
   tracksAmount: number;
 }
 
+export interface AlbumMutation {
+  title: string;
+  artist: string;
+  releaseYear: string;
+  cover: File | null;
+}
+
 export type AlbumTypeExtended = Omit<AlbumType, "artist"> & {artist: ArtistType};
 
 export interface ArtistAlbumsType {

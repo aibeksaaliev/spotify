@@ -1,11 +1,11 @@
 import React, {useEffect} from 'react';
 import {CircularProgress, Container, Grid} from "@mui/material";
-import {useAppDispatch, useAppSelector} from "../app/hooks";
-import {selectAlbums, selectAlbumsLoading} from "../feauters/albums/albumsSlice";
-import {getArtistAlbums} from "../feauters/albums/albumsThunks";
+import {useAppDispatch, useAppSelector} from "../../app/hooks";
+import {selectAlbums, selectAlbumsLoading} from "../../feauters/albums/albumsSlice";
+import {getArtistAlbums} from "../../feauters/albums/albumsThunks";
 import {useParams} from "react-router-dom";
 import Box from "@mui/material/Box";
-import AlbumCard from "../components/Cards/AlbumCard";
+import AlbumCard from "../../components/Cards/AlbumCard";
 import Typography from "@mui/material/Typography";
 
 const Albums = () => {

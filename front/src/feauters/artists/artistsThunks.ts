@@ -22,7 +22,7 @@ export const createArtist = createAsyncThunk<void, ArtistMutation, {state: RootS
           }
         });
 
-        await axiosApi.post('/artists', artist, {headers: {"Authorization": user.token}});
+        await axiosApi.post('/artists', formData, {headers: {"Authorization": user.token}});
       }
     } catch (e) {
       if (isAxiosError(e) && e.response && e.response.status === 400) {
