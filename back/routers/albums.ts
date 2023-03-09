@@ -3,21 +3,25 @@ import Album from "../models/Album";
 import {coversUpload} from "../multer";
 import Artist from "../models/Artist";
 import mongoose from "mongoose";
-import auth from "../middleware/auth";
+import auth, {RequestWithUser} from "../middleware/auth";
 import permit from "../middleware/permit";
 import path from "path";
 import config from "../config";
 import {promises as fs} from "fs";
+import access from "../middleware/access";
 
 const albumsRouter = express.Router();
 
 albumsRouter.post('/', auth, coversUpload.single('cover'), async (req, res) => {
   try {
+    const user = (req as RequestWithUser).user;
+
     const album = await Album.create({
       title: req.body.title,
       artist: req.body.artist,
       releaseYear: req.body.releaseYear,
-      cover: req.file ? req.file.filename : null
+      cover: req.file ? req.file.filename : null,
+      addedBy: user._id
     });
 
     try {
@@ -31,21 +35,69 @@ albumsRouter.post('/', auth, coversUpload.single('cover'), async (req, res) => {
   }
 });
 
-albumsRouter.get('/', async (req, res) => {
+albumsRouter.get('/', access, async (req, res) => {
   try {
-    if (req.query.artist) {
-      const albumsByArtist = await Album.aggregate([
-        {$match: {artist: new mongoose.Types.ObjectId(req.query.artist as string)}},
-        {$lookup: {from: "tracks", localField: "_id", foreignField: "album", as: "tracks"}},
-        {$addFields: {tracksAmount: {$size: "$tracks"}}},
-        {$project: {_id: 1, title: 1, artist: 1, releaseYear: 1, cover: 1, tracksAmount: 1}},
-        {$sort: {releaseYear: -1}}
-      ]);
-      const artist = await Artist.findById(req.query.artist).select('name');
-      return res.send({albums: albumsByArtist, artist: artist});
+    const user = (req as RequestWithUser).user;
+
+    if (!user) {
+      if (req.query.artist) {
+        const albumsByArtist = await Album.aggregate([
+          {$match: {artist: new mongoose.Types.ObjectId(req.query.artist as string), isPublished: true}},
+          {$lookup: {from: "tracks", localField: "_id", foreignField: "album", as: "tracks"}},
+          {$addFields: {tracksAmount: {$size: "$tracks"}}},
+          {$project: {_id: 1, title: 1, artist: 1, releaseYear: 1, cover: 1, tracksAmount: 1}},
+          {$sort: {releaseYear: -1}}
+        ]);
+        const artist = await Artist.findById(req.query.artist).select('name');
+        return res.send({albums: albumsByArtist, artist: artist});
+      } else {
+        const albums = await Album.find({isPublished: true});
+        return res.send(albums);
+      }
     } else {
-      const albums = await Album.find();
-      return res.send(albums);
+      if (user.role === "admin") {
+        if (req.query.artist) {
+          const albumsByArtist = await Album.aggregate([
+            {$match: {artist: new mongoose.Types.ObjectId(req.query.artist as string)}},
+            {$lookup: {from: "tracks", localField: "_id", foreignField: "album", as: "tracks"}},
+            {$addFields: {tracksAmount: {$size: "$tracks"}}},
+            {$project: {_id: 1, title: 1, artist: 1, releaseYear: 1, cover: 1, tracksAmount: 1}},
+            {$sort: {releaseYear: -1}}
+          ]);
+          const artist = await Artist.findById(req.query.artist).select('name');
+          return res.send({albums: albumsByArtist, artist: artist});
+        } else {
+          const albums = await Album.find();
+          return res.send(albums);
+        }
+      } else {
+        if (req.query.artist) {
+          const albumsByArtist = await Album.aggregate([
+            {
+              $match: {
+                artist: new mongoose.Types.ObjectId(req.query.artist as string), $or: [
+                  {addedBy: user._id},
+                  {isPublished: true}
+                ]
+              }
+            },
+            {$lookup: {from: "tracks", localField: "_id", foreignField: "album", as: "tracks"}},
+            {$addFields: {tracksAmount: {$size: "$tracks"}}},
+            {$project: {_id: 1, title: 1, artist: 1, releaseYear: 1, cover: 1, tracksAmount: 1}},
+            {$sort: {releaseYear: -1}}
+          ]);
+          const artist = await Artist.findById(req.query.artist).select('name');
+          return res.send({albums: albumsByArtist, artist: artist});
+        } else {
+          const albums = await Album.find({
+            $or: [
+              {addedBy: user._id},
+              {isPublished: true}
+            ]
+          });
+          return res.send(albums);
+        }
+      }
     }
   } catch {
     return res.sendStatus(500);

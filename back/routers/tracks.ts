@@ -1,19 +1,23 @@
 import express from "express";
 import Track from "../models/Track";
 import Album from "../models/Album";
-import auth from "../middleware/auth";
+import auth, {RequestWithUser} from "../middleware/auth";
 import permit from "../middleware/permit";
+import access from "../middleware/access";
 
 const tracksRouter = express.Router();
 
 tracksRouter.post('/', auth, async (req, res) => {
   try {
+    const user = (req as RequestWithUser).user;
+
     const track = await Track.create({
       title: req.body.title,
       album: req.body.album,
       duration: req.body.duration,
       number: req.body.number,
       videoId: req.body.videoId ? req.body.videoId : null,
+      addedBy: user._id
     });
 
     try {
@@ -27,21 +31,69 @@ tracksRouter.post('/', auth, async (req, res) => {
   }
 });
 
-tracksRouter.get('/', async (req, res) => {
+tracksRouter.get('/', access, async (req, res) => {
   try {
-    if (req.query.album) {
-      const tracksByAlbum = await Track.find({album: req.query.album}).sort({number: +1});
-      const albumInfo = await Album.findById(req.query.album).populate('artist');
-      return res.send({tracks: tracksByAlbum, albumInfo: albumInfo});
-    } else if (req.query.artist) {
-      const albums = await Album.find({"artist": req.query.artist}).populate("artist");
-      const tracks = albums.map(album => album._id);
-      const tracksByArtist = await Track.find({"album": {$in: tracks}});
-      return res.send(tracksByArtist);
+    const user = (req as RequestWithUser).user;
+
+    if (!user) {
+      if (req.query.album) {
+        const tracksByAlbum = await Track.find({album: req.query.album, isPublished: true}).sort({number: +1});
+        const albumInfo = await Album.findById(req.query.album).populate('artist');
+        return res.send({tracks: tracksByAlbum, albumInfo: albumInfo});
+      } else if (req.query.artist) {
+        const albums = await Album.find({"artist": req.query.artist, isPublished: true}).populate("artist");
+        const tracks = albums.map(album => album._id);
+        const tracksByArtist = await Track.find({"album": {$in: tracks}});
+        return res.send(tracksByArtist);
+      } else {
+        const tracks = await Track.find({isPublished: true});
+        return res.send(tracks);
+      }
     } else {
-      const tracks = await Track.find();
-      return res.send(tracks);
+      if (user.role === "admin") {
+        if (req.query.album) {
+          const tracksByAlbum = await Track.find({album: req.query.album}).sort({number: +1});
+          const albumInfo = await Album.findById(req.query.album).populate('artist');
+          return res.send({tracks: tracksByAlbum, albumInfo: albumInfo});
+        } else if (req.query.artist) {
+          const albums = await Album.find({"artist": req.query.artist}).populate("artist");
+          const tracks = albums.map(album => album._id);
+          const tracksByArtist = await Track.find({"album": {$in: tracks}});
+          return res.send(tracksByArtist);
+        } else {
+          const tracks = await Track.find();
+          return res.send(tracks);
+        }
+      } else {
+        if (req.query.album) {
+          const tracksByAlbum = await Track.find({album: req.query.album, $or: [{addedBy: user._id}, {isPublished: true}]}).sort({number: +1});
+          const albumInfo = await Album.findById(req.query.album).populate('artist');
+          return res.send({tracks: tracksByAlbum, albumInfo: albumInfo});
+        } else if (req.query.artist) {
+          const albums = await Album.find({"artist": req.query.artist, $or: [{addedBy: user._id}, {isPublished: true}]}).populate("artist");
+          const tracks = albums.map(album => album._id);
+          const tracksByArtist = await Track.find({"album": {$in: tracks}});
+          return res.send(tracksByArtist);
+        } else {
+          const tracks = await Track.find({isPublished: true, addedBy: user._id});
+          return res.send(tracks);
+        }
+      }
     }
+
+    // if (req.query.album) {
+    //   const tracksByAlbum = await Track.find({album: req.query.album}).sort({number: +1});
+    //   const albumInfo = await Album.findById(req.query.album).populate('artist');
+    //   return res.send({tracks: tracksByAlbum, albumInfo: albumInfo});
+    // } else if (req.query.artist) {
+    //   const albums = await Album.find({"artist": req.query.artist}).populate("artist");
+    //   const tracks = albums.map(album => album._id);
+    //   const tracksByArtist = await Track.find({"album": {$in: tracks}});
+    //   return res.send(tracksByArtist);
+    // } else {
+    //   const tracks = await Track.find();
+    //   return res.send(tracks);
+    // }
   } catch {
     return res.sendStatus(500);
   }

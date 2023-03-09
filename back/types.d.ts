@@ -16,6 +16,7 @@ export interface Album {
   releaseYear: number;
   cover: string | null;
   isPublished: boolean;
+  addedBy: ObjectId;
 }
 
 export type AlbumWithoutId = Omit<Album, "id">;

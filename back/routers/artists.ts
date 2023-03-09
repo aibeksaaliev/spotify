@@ -1,7 +1,7 @@
 import express from "express";
 import Artist from "../models/Artist";
 import {photosUpload} from "../multer";
-import auth from "../middleware/auth";
+import auth, {RequestWithUser} from "../middleware/auth";
 import permit from "../middleware/permit";
 import config from "../config";
 import path from "path";
@@ -12,10 +12,13 @@ const artistsRouter = express.Router();
 
 artistsRouter.post('/', auth, photosUpload.single('photo'), async (req, res) => {
   try {
+    const user = (req as RequestWithUser).user;
+
     const artist = await Artist.create({
       name: req.body.name,
       photo: req.file ? req.file.filename : null,
-      info: req.body.info ? req.body.info : null
+      info: req.body.info ? req.body.info : null,
+      addedBy: user._id
     });
 
     try {
@@ -37,11 +40,16 @@ artistsRouter.get('/', access, async (req, res) => {
       const artists = await Artist.find({isPublished: true});
       return res.send(artists);
     } else {
-      if (user && user.role === "admin") {
+      if (user.role === "admin") {
         const artists = await Artist.find();
         return res.send(artists);
       } else {
-        const artists = await Artist.find({isPublished: true});
+        const artists = await Artist.find({
+          $or: [
+            { addedBy: user._id },
+            { isPublished: true }
+          ]
+        });
         return res.send(artists);
       }
     }
