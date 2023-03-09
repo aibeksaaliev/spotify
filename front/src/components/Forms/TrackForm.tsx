@@ -1,14 +1,14 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {TrackMutation} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectTrackCreateError, selectTrackCreateLoading} from "../../feauters/tracks/tracksSlice";
 import {Grid, MenuItem, TextField} from "@mui/material";
-import {DemoContainer} from '@mui/x-date-pickers/internals/demo';
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import {TimePicker} from '@mui/x-date-pickers/TimePicker';
 import {LoadingButton} from "@mui/lab";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import {getArtists} from "../../feauters/artists/artistsThunks";
+import {selectArtists} from "../../feauters/artists/artistsSlice";
+import {selectAlbums} from "../../feauters/albums/albumsSlice";
+import {getArtistAlbums} from "../../feauters/albums/albumsThunks";
 
 interface Props {
   onSubmit: (track: TrackMutation) => void;
@@ -16,6 +16,8 @@ interface Props {
 
 const TrackForm: React.FC<Props> = ({onSubmit}) => {
   const dispatch = useAppDispatch();
+  const artists = useAppSelector(selectArtists)
+  const albumsData = useAppSelector(selectAlbums);
   const error = useAppSelector(selectTrackCreateError);
   const loading = useAppSelector(selectTrackCreateLoading);
   const [track, setTrack] = useState<TrackMutation>({
@@ -24,6 +26,7 @@ const TrackForm: React.FC<Props> = ({onSubmit}) => {
     duration: "",
     number: ""
   });
+  const [artist, setArtist] = useState("");
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -43,12 +46,40 @@ const TrackForm: React.FC<Props> = ({onSubmit}) => {
     onSubmit(track);
   };
 
+  useEffect(() => {
+    dispatch(getArtists());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (artist) {
+      dispatch(getArtistAlbums(artist));
+    }
+  }, [dispatch, artist]);
+
   return (
     <form
       autoComplete="off"
       onSubmit={submitFormHandler}
     >
       <Grid container direction="column" spacing={2}>
+        <Grid item xs>
+          <TextField
+            select
+            label="Artist"
+            name="artist"
+            fullWidth
+            value={artist}
+            onChange={(e) => setArtist(e.target.value)}
+            required
+            error={Boolean(getFieldError('artist'))}
+            helperText={getFieldError('artist')}
+          >
+            <MenuItem value="" disabled>Please select an artist</MenuItem>
+            {artists.map(artist => (
+              <MenuItem key={artist._id} value={artist._id}>{artist.name}</MenuItem>
+            ))}
+          </TextField>
+        </Grid>
         <Grid item xs>
           <TextField
             select
@@ -61,10 +92,10 @@ const TrackForm: React.FC<Props> = ({onSubmit}) => {
             error={Boolean(getFieldError('album'))}
             helperText={getFieldError('album')}
           >
-            <MenuItem value="" disabled>Please select an artist</MenuItem>
-            {/*{artists.map(artist => (*/}
-            {/*  <MenuItem key={artist._id} value={artist._id}>{artist.name}</MenuItem>*/}
-            {/*))}*/}
+            <MenuItem value="" disabled>Please select an album</MenuItem>
+            {albumsData?.albums.length !== 0 && albumsData?.albums.map(album => (
+              <MenuItem key={album._id} value={album._id}>{album.title}</MenuItem>
+            ))}
           </TextField>
         </Grid>
         <Grid item xs>
