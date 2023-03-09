@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react';
 import {CircularProgress, Container, List} from "@mui/material";
-import TrackCard from "../components/Cards/TrackCard";
-import {useAppDispatch, useAppSelector} from "../app/hooks";
-import {selectTracks, selectTracksLoading} from "../feauters/tracks/tracksSlice";
+import TrackCard from "../../components/Cards/TrackCard";
+import {useAppDispatch, useAppSelector} from "../../app/hooks";
+import {selectTracks, selectTracksLoading} from "../../feauters/tracks/tracksSlice";
 import {useParams} from "react-router-dom";
-import {getAlbumTracks} from "../feauters/tracks/tracksThunks";
+import {getAlbumTracks} from "../../feauters/tracks/tracksThunks";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import YouTubePlayer from "../components/YouTubePlayer/YouTubePlayer";
+import YouTubePlayer from "../../components/YouTubePlayer/YouTubePlayer";
 
 const Tracks = () => {
   const dispatch = useAppDispatch();

@@ -48,6 +48,13 @@ export interface TrackType {
   videoId: string | null;
 }
 
+export interface TrackMutation {
+  title: string;
+  album: string;
+  duration: string;
+  number: string;
+}
+
 export interface AlbumTracksType {
   tracks: TrackType [],
   albumInfo: AlbumTypeExtended

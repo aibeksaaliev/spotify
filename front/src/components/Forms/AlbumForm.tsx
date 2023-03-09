@@ -9,7 +9,6 @@ import FileInput from "../UI/FileInput/FileInput";
 import {LoadingButton} from "@mui/lab";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 
-
 interface Props {
   onSubmit: (album: AlbumMutation) => void;
 }
