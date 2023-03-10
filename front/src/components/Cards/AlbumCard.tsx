@@ -58,6 +58,11 @@ const AlbumCard: React.FC<Props> = ({album}) => {
     </>
   );
 
+  let publishInfo = !album.isPublished && (
+    (user?.role === "admin" && <span>Not Published</span>) ||
+    (user?.role === "user" && user._id === album.addedBy && <span>Not Published</span>)
+  );
+
   let userControllers = user?.role === "user" && (user._id === album.addedBy && !album.isPublished && (
     <LoadingButton
       loading={deleteLoading}
@@ -84,6 +89,7 @@ const AlbumCard: React.FC<Props> = ({album}) => {
           </Typography>
           <Typography>{album.releaseYear}</Typography>
           <Typography>{album.tracksAmount} songs</Typography>
+          <Typography>{publishInfo}</Typography>
         </CardContent>
         <CardActions>
           <Button size="small" onClick={() => navigate('/albums/' + album._id)}>View</Button>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, ListItem, ListItemIcon, ListItemText} from "@mui/material";
+import {Button, ListItem, ListItemIcon, ListItemText, Typography} from "@mui/material";
 import AudiotrackIcon from '@mui/icons-material/Audiotrack';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import {TrackType} from "../../types";
@@ -55,6 +55,11 @@ const TrackCard: React.FC<Props> = ({track}) => {
     </>
   );
 
+  let publishInfo = !track.isPublished && (
+    (user?.role === "admin" && <span>Not Published</span>) ||
+    (user?.role === "user" && user._id === track.addedBy && <span>Not Published</span>)
+  );
+
   let userControllers = user?.role === "user" && (user._id === track.addedBy && !track.isPublished && (
     <LoadingButton
       size="small"
@@ -78,6 +83,7 @@ const TrackCard: React.FC<Props> = ({track}) => {
         {track.title}
       </ListItemText>
       <ListItemText sx={{textAlign: "right"}}>
+        <Typography sx={{display: "inline"}}>{publishInfo}</Typography>
         {adminControllers}
         {userControllers}
         {user && (

@@ -71,6 +71,11 @@ const ArtistCard: React.FC<Props> = ({artist}) => {
     )
   );
 
+  let publishInfo = !artist.isPublished && (
+    (user?.role === "admin" && <span>Not Published</span>) ||
+    (user?.role === "user" && user._id === artist.addedBy && <span>Not Published</span>)
+  );
+
 
   return (
     <Grid item xs={12} sm={6} md={4}>
@@ -84,6 +89,9 @@ const ArtistCard: React.FC<Props> = ({artist}) => {
         <CardContent sx={{flexGrow: 1}}>
           <Typography gutterBottom variant="h5" component="h2">
             {artist.name}
+          </Typography>
+          <Typography>
+            {publishInfo}
           </Typography>
         </CardContent>
         <CardActions>
