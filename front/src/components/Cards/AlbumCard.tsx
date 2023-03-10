@@ -6,14 +6,19 @@ import {apiUrl} from "../../constants";
 import {useNavigate} from "react-router-dom";
 import NoImageAvailable from "../../../src/assets/images/no_image_available.jpg";
 import {LoadingButton} from "@mui/lab";
-import {useAppSelector} from "../../app/hooks";
+import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectUser} from "../../feauters/users/usersSlice";
+import {deleteAlbum, publishAlbum} from "../../feauters/albums/albumsThunks";
+import {selectAlbumDeleteLoading, selectAlbumPublishLoading} from "../../feauters/albums/albumsSlice";
 
 interface Props {
   album: AlbumType;
 }
 
 const AlbumCard: React.FC<Props> = ({album}) => {
+  const dispatch = useAppDispatch();
+  const publishLoading = useAppSelector(selectAlbumPublishLoading);
+  const deleteLoading = useAppSelector(selectAlbumDeleteLoading);
   const user = useAppSelector(selectUser);
   const navigate = useNavigate();
 
@@ -23,20 +28,43 @@ const AlbumCard: React.FC<Props> = ({album}) => {
     image = apiUrl + album.cover;
   }
 
+  const togglePublish = async () => {
+    await dispatch(publishAlbum(album._id));
+  };
+
+  const removeAlbum = async () => {
+    await dispatch(deleteAlbum(album._id));
+  };
+
   let adminControllers = user?.role === "admin" && (
     <>
-      <LoadingButton size="small">
+      <LoadingButton
+        loading={deleteLoading}
+        disabled={deleteLoading || publishLoading}
+        size="small"
+        onClick={removeAlbum}
+      >
         Delete
       </LoadingButton>
       {!album.isPublished &&
-          <LoadingButton size="small">
+          <LoadingButton
+              loading={publishLoading}
+              disabled={deleteLoading || publishLoading}
+              size="small"
+              onClick={togglePublish}
+          >
               Publish
           </LoadingButton>}
     </>
   );
 
   let userControllers = user?.role === "user" && (user._id === album.addedBy && !album.isPublished && (
-    <LoadingButton>
+    <LoadingButton
+      loading={deleteLoading}
+      disabled={deleteLoading || publishLoading}
+      size="small"
+      onClick={removeAlbum}
+    >
       Delete
     </LoadingButton>
   ));

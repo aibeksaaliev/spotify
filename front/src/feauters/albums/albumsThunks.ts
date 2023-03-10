@@ -36,3 +36,17 @@ export const getArtistAlbums = createAsyncThunk<ArtistAlbumsType, string>(
     return response.data;
   }
 );
+
+export const publishAlbum = createAsyncThunk<void, string>(
+  'albums/publishOne',
+  async (id) => {
+    await axiosApi.patch('/albums/' + id + '/togglePublished');
+  }
+);
+
+export const deleteAlbum = createAsyncThunk<void, string>(
+  'albums/delete',
+  async (id) => {
+    await axiosApi.delete('/albums/' + id);
+  }
+);

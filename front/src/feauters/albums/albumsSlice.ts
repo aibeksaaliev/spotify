@@ -1,7 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store";
 import {ArtistAlbumsType, ValidationError} from "../../types";
-import {createAlbum, getArtistAlbums} from "./albumsThunks";
+import {createAlbum, deleteAlbum, getArtistAlbums, publishAlbum} from "./albumsThunks";
 
 interface AlbumsState {
   albums: ArtistAlbumsType | null;
@@ -9,6 +9,8 @@ interface AlbumsState {
   albumsError: boolean;
   albumCreateLoading: boolean;
   albumCreateError: ValidationError | null;
+  albumPublishLoading: boolean;
+  albumDeleteLoading: boolean;
 }
 
 const initialState: AlbumsState = {
@@ -16,7 +18,9 @@ const initialState: AlbumsState = {
   albumsLoading: false,
   albumsError: false,
   albumCreateLoading: false,
-  albumCreateError: null
+  albumCreateError: null,
+  albumPublishLoading: false,
+  albumDeleteLoading: false
 };
 
 export const albumsSlice = createSlice({
@@ -44,6 +48,22 @@ export const albumsSlice = createSlice({
       state.albumsLoading = false;
       state.albumsError = true;
     });
+
+    builder.addCase(publishAlbum.pending, (state) => {
+      state.albumPublishLoading = true;
+    }).addCase(publishAlbum.fulfilled, (state) => {
+      state.albumPublishLoading = false;
+    }).addCase(publishAlbum.rejected, (state) => {
+      state.albumPublishLoading = false;
+    });
+
+    builder.addCase(deleteAlbum.pending, (state) => {
+      state.albumDeleteLoading = true;
+    }).addCase(deleteAlbum.fulfilled, (state) => {
+      state.albumDeleteLoading = false;
+    }).addCase(deleteAlbum.rejected, (state) => {
+      state.albumDeleteLoading = false;
+    });
   }
 });
 
@@ -52,3 +72,5 @@ export const selectAlbums = (state: RootState) => state.albums.albums;
 export const selectAlbumsLoading = (state: RootState) => state.albums.albumsLoading;
 export const selectAlbumCreateLoading = (state: RootState) => state.albums.albumCreateLoading;
 export const selectAlbumCreateError = (state: RootState) => state.albums.albumCreateError;
+export const selectAlbumPublishLoading = (state: RootState) => state.albums.albumPublishLoading;
+export const selectAlbumDeleteLoading = (state: RootState) => state.albums.albumDeleteLoading;

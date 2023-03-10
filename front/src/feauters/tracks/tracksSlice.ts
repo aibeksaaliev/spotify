@@ -1,7 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store";
 import {AlbumTracksType, ValidationError} from "../../types";
-import {createTrack, getAlbumTracks} from "./tracksThunks";
+import {createTrack, deleteTrack, getAlbumTracks, publishTrack} from "./tracksThunks";
 
 interface TracksState {
   tracks: AlbumTracksType | null;
@@ -10,6 +10,8 @@ interface TracksState {
   videoId: string | null;
   trackCreateLoading: boolean;
   trackCreateError: ValidationError | null;
+  trackPublishLoading: boolean;
+  trackDeleteLoading: boolean;
 }
 
 const initialState: TracksState = {
@@ -18,7 +20,9 @@ const initialState: TracksState = {
   tracksError: false,
   videoId: null,
   trackCreateLoading: false,
-  trackCreateError: null
+  trackCreateError: null,
+  trackPublishLoading: false,
+  trackDeleteLoading: false
 };
 
 export const tracksSlice = createSlice({
@@ -53,6 +57,22 @@ export const tracksSlice = createSlice({
       state.tracksLoading = false;
       state.tracksError = true;
     });
+
+    builder.addCase(publishTrack.pending, (state) => {
+      state.trackPublishLoading = true;
+    }).addCase(publishTrack.fulfilled, (state) => {
+      state.trackPublishLoading = false;
+    }).addCase(publishTrack.rejected, (state) => {
+      state.trackPublishLoading = false;
+    });
+
+    builder.addCase(deleteTrack.pending, (state) => {
+      state.trackDeleteLoading = true;
+    }).addCase(deleteTrack.fulfilled, (state) => {
+      state.trackDeleteLoading = false;
+    }).addCase(deleteTrack.rejected, (state) => {
+      state.trackDeleteLoading = false;
+    });
   }
 });
 
@@ -63,3 +83,5 @@ export const selectTracksLoading = (state: RootState) => state.tracks.tracksLoad
 export const selectYouTubeVideoId = (state: RootState) => state.tracks.videoId;
 export const selectTrackCreateLoading = (state: RootState) => state.tracks.trackCreateLoading;
 export const selectTrackCreateError = (state: RootState) => state.tracks.trackCreateError;
+export const selectTrackPublishLoading = (state: RootState) => state.tracks.trackPublishLoading;
+export const selectTrackDeleteLoading = (state: RootState) => state.tracks.trackDeleteLoading;

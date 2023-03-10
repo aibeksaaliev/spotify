@@ -1,7 +1,7 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../../app/store";
 import {ArtistType, ValidationError} from "../../types";
-import {createArtist, getArtists} from "./artistsThunks";
+import {createArtist, deleteArtist, getArtists, publishArtist} from "./artistsThunks";
 
 interface ArtistsState {
   artists: ArtistType[];
@@ -9,6 +9,8 @@ interface ArtistsState {
   artistsError: boolean;
   artistCreateLoading: boolean;
   artistCreateError: ValidationError | null;
+  artistPublishLoading: boolean;
+  artistDeleteLoading: boolean;
 }
 
 const initialState: ArtistsState = {
@@ -16,7 +18,9 @@ const initialState: ArtistsState = {
   artistsLoading: false,
   artistsError: false,
   artistCreateLoading: false,
-  artistCreateError: null
+  artistCreateError: null,
+  artistPublishLoading: false,
+  artistDeleteLoading: false
 };
 
 export const artistsSlice = createSlice({
@@ -44,6 +48,22 @@ export const artistsSlice = createSlice({
       state.artistsLoading = false;
       state.artistsError = true;
     });
+
+    builder.addCase(publishArtist.pending, (state) => {
+      state.artistPublishLoading = true;
+    }).addCase(publishArtist.fulfilled, (state) => {
+      state.artistPublishLoading = false;
+    }).addCase(publishArtist.rejected, (state) => {
+      state.artistPublishLoading = false;
+    });
+
+    builder.addCase(deleteArtist.pending, (state) => {
+      state.artistDeleteLoading = true;
+    }).addCase(deleteArtist.fulfilled, (state) => {
+      state.artistDeleteLoading = false;
+    }).addCase(deleteArtist.rejected, (state) => {
+      state.artistDeleteLoading = false;
+    });
   }
 });
 
@@ -52,3 +72,5 @@ export const selectArtists = (state: RootState) => state.artists.artists;
 export const selectArtistsLoading = (state: RootState) => state.artists.artistsLoading;
 export const selectArtistCreateLoading = (state: RootState) => state.artists.artistCreateLoading;
 export const selectArtistCreateError = (state: RootState) => state.artists.artistCreateError;
+export const selectArtistPublishLoading = (state: RootState) => state.artists.artistPublishLoading;
+export const selectArtistDeleteLoading = (state: RootState) => state.artists.artistDeleteLoading;

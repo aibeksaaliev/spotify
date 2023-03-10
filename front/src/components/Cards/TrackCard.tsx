@@ -6,8 +6,9 @@ import {TrackType} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectUser} from "../../feauters/users/usersSlice";
 import {submitTrackHistory} from "../../feauters/trackHistory/trackHistoryThunks";
-import {getYouTubeUrl} from "../../feauters/tracks/tracksSlice";
+import {getYouTubeUrl, selectTrackDeleteLoading, selectTrackPublishLoading} from "../../feauters/tracks/tracksSlice";
 import {LoadingButton} from "@mui/lab";
+import {deleteTrack, publishTrack} from "../../feauters/tracks/tracksThunks";
 
 interface Props {
   track: TrackType;
@@ -15,6 +16,8 @@ interface Props {
 
 const TrackCard: React.FC<Props> = ({track}) => {
   const dispatch = useAppDispatch();
+  const publishLoading = useAppSelector(selectTrackPublishLoading);
+  const deleteLoading = useAppSelector(selectTrackDeleteLoading);
   const user = useAppSelector(selectUser);
 
   const playSong = async () => {
@@ -22,20 +25,43 @@ const TrackCard: React.FC<Props> = ({track}) => {
     dispatch(getYouTubeUrl(track.videoId));
   };
 
+  const togglePublish = async () => {
+    await dispatch(publishTrack(track._id));
+  };
+
+  const removeTrack = async () => {
+    await dispatch(deleteTrack(track._id));
+  };
+
   let adminControllers = user?.role === "admin" && (
     <>
-      <LoadingButton size="small">
+      <LoadingButton
+        size="small"
+        loading={deleteLoading}
+        disabled={deleteLoading || publishLoading}
+        onClick={removeTrack}
+      >
         Delete
       </LoadingButton>
       {!track.isPublished &&
-          <LoadingButton size="small">
+          <LoadingButton
+              size="small"
+              loading={publishLoading}
+              disabled={deleteLoading || publishLoading}
+              onClick={togglePublish}
+          >
               Publish
           </LoadingButton>}
     </>
   );
 
   let userControllers = user?.role === "user" && (user._id === track.addedBy && !track.isPublished && (
-    <LoadingButton>
+    <LoadingButton
+      size="small"
+      loading={deleteLoading}
+      disabled={deleteLoading || publishLoading}
+      onClick={removeTrack}
+    >
       Delete
     </LoadingButton>
   ));
