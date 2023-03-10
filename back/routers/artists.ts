@@ -9,6 +9,7 @@ import {promises as fs} from "fs";
 import access, {AnyRequest} from "../middleware/access";
 import Album from "../models/Album";
 import Track from "../models/Track";
+import mongoose from "mongoose";
 
 const artistsRouter = express.Router();
 
@@ -48,8 +49,8 @@ artistsRouter.get('/', access, async (req, res) => {
       } else {
         const artists = await Artist.find({
           $or: [
-            { addedBy: user._id },
-            { isPublished: true }
+            {addedBy: user._id},
+            {isPublished: true}
           ]
         });
         return res.send(artists);
@@ -80,23 +81,27 @@ artistsRouter.delete('/:id', auth, async (req, res) => {
     const user = (req as RequestWithUser).user;
 
     const artist = await Artist.findById(req.params.id);
-    const albums = await Album.find({artist: req.params.id});
+    const albums = await Album.find({artist: new mongoose.Types.ObjectId(req.params.id)});
 
     if (!artist) {
       return res.status(404).send({message: "Artist not found"});
     }
 
     if (user.role === "admin") {
-      const photoPath = path.join(config.publicPath, artist.photo as string);
-      await fs.unlink(photoPath);
+      if (artist.photo) {
+        const photoPath = path.join(config.publicPath, artist.photo as string);
+        await fs.unlink(photoPath);
+      }
       await Track.deleteMany({album: {$in: albums}});
       await Album.deleteMany({artist: artist._id});
       await artist.deleteOne();
     }
 
     if (user.role === "user") {
-      const photoPath = path.join(config.publicPath, artist.photo as string);
-      await fs.unlink(photoPath);
+      if (artist.photo) {
+        const photoPath = path.join(config.publicPath, artist.photo as string);
+        await fs.unlink(photoPath);
+      }
       await Track.deleteMany({album: {$in: albums}});
       await Album.deleteMany({artist: artist._id});
       await artist.deleteOne({addedBy: user._id, isPublished: false});

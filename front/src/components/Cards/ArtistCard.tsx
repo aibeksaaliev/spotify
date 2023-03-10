@@ -9,7 +9,7 @@ import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectUser} from "../../feauters/users/usersSlice";
 import {LoadingButton} from "@mui/lab";
 import {selectArtistDeleteLoading, selectArtistPublishLoading} from "../../feauters/artists/artistsSlice";
-import {deleteArtist, publishArtist} from "../../feauters/artists/artistsThunks";
+import {deleteArtist, getArtists, publishArtist} from "../../feauters/artists/artistsThunks";
 
 interface Props {
   artist: ArtistType;
@@ -30,10 +30,12 @@ const ArtistCard: React.FC<Props> = ({artist}) => {
 
   const togglePublish = async () => {
     await dispatch(publishArtist(artist._id));
+    await dispatch(getArtists());
   };
 
   const removeArtist = async () => {
     await dispatch(deleteArtist(artist._id));
+    await dispatch(getArtists());
   };
 
   let adminControllers = user?.role === "admin" && (
