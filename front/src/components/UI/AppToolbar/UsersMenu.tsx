@@ -4,6 +4,7 @@ import { Button, Menu, MenuItem } from '@mui/material';
 import {useNavigate} from "react-router-dom";
 import {useAppDispatch} from "../../../app/hooks";
 import {logout} from "../../../feauters/users/usersThunks";
+import {getArtists} from "../../../feauters/artists/artistsThunks";
 
 interface Props {
   user: User;
@@ -21,8 +22,10 @@ const UsersMenu: React.FC<Props> = ({user}) => {
     setAnchorEl(null);
   };
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    await dispatch(logout());
+    await dispatch(getArtists());
+    navigate('/');
   };
 
   return (
