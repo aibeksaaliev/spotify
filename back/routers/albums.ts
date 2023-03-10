@@ -61,7 +61,7 @@ albumsRouter.get('/', access, async (req, res) => {
             {$match: {artist: new mongoose.Types.ObjectId(req.query.artist as string)}},
             {$lookup: {from: "tracks", localField: "_id", foreignField: "album", as: "tracks"}},
             {$addFields: {tracksAmount: {$size: "$tracks"}}},
-            {$project: {_id: 1, title: 1, artist: 1, releaseYear: 1, cover: 1, tracksAmount: 1}},
+            {$project: {_id: 1, title: 1, artist: 1, releaseYear: 1, cover: 1, tracksAmount: 1, addedBy: 1, isPublished: 1}},
             {$sort: {releaseYear: -1}}
           ]);
           const artist = await Artist.findById(req.query.artist).select('name');
@@ -83,7 +83,7 @@ albumsRouter.get('/', access, async (req, res) => {
             },
             {$lookup: {from: "tracks", localField: "_id", foreignField: "album", as: "tracks"}},
             {$addFields: {tracksAmount: {$size: "$tracks"}}},
-            {$project: {_id: 1, title: 1, artist: 1, releaseYear: 1, cover: 1, tracksAmount: 1}},
+            {$project: {_id: 1, title: 1, artist: 1, releaseYear: 1, cover: 1, tracksAmount: 1, addedBy: 1, isPublished: 1}},
             {$sort: {releaseYear: -1}}
           ]);
           const artist = await Artist.findById(req.query.artist).select('name');
