@@ -3,6 +3,8 @@ export interface ArtistType {
   name: string;
   photo: string | null;
   info: string;
+  isPublished: boolean;
+  addedBy: string;
 }
 
 export interface ArtistMutation {
@@ -19,6 +21,8 @@ export interface AlbumType {
   cover: string | null;
   artistName: string;
   tracksAmount: number;
+  isPublished: boolean;
+  addedBy: string;
 }
 
 export interface AlbumMutation {
@@ -46,6 +50,8 @@ export interface TrackType {
   duration: string;
   number: number;
   videoId: string | null;
+  isPublished: boolean;
+  addedBy: string;
 }
 
 export interface TrackMutation {

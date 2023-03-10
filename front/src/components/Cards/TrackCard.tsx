@@ -7,6 +7,7 @@ import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectUser} from "../../feauters/users/usersSlice";
 import {submitTrackHistory} from "../../feauters/trackHistory/trackHistoryThunks";
 import {getYouTubeUrl} from "../../feauters/tracks/tracksSlice";
+import {LoadingButton} from "@mui/lab";
 
 interface Props {
   track: TrackType;
@@ -21,6 +22,24 @@ const TrackCard: React.FC<Props> = ({track}) => {
     dispatch(getYouTubeUrl(track.videoId));
   };
 
+  let adminControllers = user?.role === "admin" && (
+    <>
+      <LoadingButton size="small">
+        Delete
+      </LoadingButton>
+      {!track.isPublished &&
+          <LoadingButton size="small">
+              Publish
+          </LoadingButton>}
+    </>
+  );
+
+  let userControllers = user?.role === "user" && (user._id === track.addedBy && !track.isPublished && (
+    <LoadingButton>
+      Delete
+    </LoadingButton>
+  ));
+
   return (
     <ListItem>
       <ListItemIcon>
@@ -33,6 +52,8 @@ const TrackCard: React.FC<Props> = ({track}) => {
         {track.title}
       </ListItemText>
       <ListItemText sx={{textAlign: "right"}}>
+        {adminControllers}
+        {userControllers}
         {user && (
           <Button onClick={playSong}>
             <PlayCircleOutlineIcon/>

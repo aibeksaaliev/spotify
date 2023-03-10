@@ -5,12 +5,16 @@ import {AlbumType} from "../../types";
 import {apiUrl} from "../../constants";
 import {useNavigate} from "react-router-dom";
 import NoImageAvailable from "../../../src/assets/images/no_image_available.jpg";
+import {LoadingButton} from "@mui/lab";
+import {useAppSelector} from "../../app/hooks";
+import {selectUser} from "../../feauters/users/usersSlice";
 
 interface Props {
   album: AlbumType;
 }
 
 const AlbumCard: React.FC<Props> = ({album}) => {
+  const user = useAppSelector(selectUser);
   const navigate = useNavigate();
 
   let image = NoImageAvailable;
@@ -18,6 +22,24 @@ const AlbumCard: React.FC<Props> = ({album}) => {
   if (album.cover) {
     image = apiUrl + album.cover;
   }
+
+  let adminControllers = user?.role === "admin" && (
+    <>
+      <LoadingButton size="small">
+        Delete
+      </LoadingButton>
+      {!album.isPublished &&
+          <LoadingButton size="small">
+              Publish
+          </LoadingButton>}
+    </>
+  );
+
+  let userControllers = user?.role === "user" && (user._id === album.addedBy && !album.isPublished && (
+    <LoadingButton>
+      Delete
+    </LoadingButton>
+  ));
 
   return (
     <Grid item xs={12} sm={6} md={4}>
@@ -37,7 +59,8 @@ const AlbumCard: React.FC<Props> = ({album}) => {
         </CardContent>
         <CardActions>
           <Button size="small" onClick={() => navigate('/albums/' + album._id)}>View</Button>
-          <Button size="small" disabled>Edit</Button>
+          {adminControllers}
+          {userControllers}
         </CardActions>
       </Card>
     </Grid>
