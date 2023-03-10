@@ -86,20 +86,6 @@ tracksRouter.get('/', access, async (req, res) => {
         }
       }
     }
-
-    // if (req.query.album) {
-    //   const tracksByAlbum = await Track.find({album: req.query.album}).sort({number: +1});
-    //   const albumInfo = await Album.findById(req.query.album).populate('artist');
-    //   return res.send({tracks: tracksByAlbum, albumInfo: albumInfo});
-    // } else if (req.query.artist) {
-    //   const albums = await Album.find({"artist": req.query.artist}).populate("artist");
-    //   const tracks = albums.map(album => album._id);
-    //   const tracksByArtist = await Track.find({"album": {$in: tracks}});
-    //   return res.send(tracksByArtist);
-    // } else {
-    //   const tracks = await Track.find();
-    //   return res.send(tracks);
-    // }
   } catch {
     return res.sendStatus(500);
   }
