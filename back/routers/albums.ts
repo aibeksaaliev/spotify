@@ -9,6 +9,7 @@ import path from "path";
 import config from "../config";
 import {promises as fs} from "fs";
 import access from "../middleware/access";
+import Track from "../models/Track";
 
 const albumsRouter = express.Router();
 
@@ -130,18 +131,30 @@ albumsRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, re
   }
 });
 
-albumsRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
+albumsRouter.delete('/:id', auth, async (req, res) => {
   try {
+    const user = (req as RequestWithUser).user;
+
     const album = await Album.findById(req.params.id);
 
     if (!album) {
       return res.status(404).send({message: "Album not found"});
     }
 
-    const coverPath = path.join(config.publicPath, album.cover as string);
-    await fs.unlink(coverPath);
+    if (user.role === "admin") {
+      const coverPath = path.join(config.publicPath, album.cover as string);
+      await fs.unlink(coverPath);
+      await Track.deleteMany({album: {$in: album}});
+      await album.deleteOne();
+    }
 
-    await album.deleteOne();
+    if (user.role === "user") {
+      const coverPath = path.join(config.publicPath, album.cover as string);
+      await fs.unlink(coverPath);
+      await Track.deleteMany({album: {$in: album}});
+      await album.deleteOne({addedBy: user._id, isPublished: false});
+    }
+
     return res.send({message: "Deleted successfully"});
   } catch (e) {
     return res.status(500);

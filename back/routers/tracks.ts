@@ -66,11 +66,17 @@ tracksRouter.get('/', access, async (req, res) => {
         }
       } else {
         if (req.query.album) {
-          const tracksByAlbum = await Track.find({album: req.query.album, $or: [{addedBy: user._id}, {isPublished: true}]}).sort({number: +1});
+          const tracksByAlbum = await Track.find({
+            album: req.query.album,
+            $or: [{addedBy: user._id}, {isPublished: true}]
+          }).sort({number: +1});
           const albumInfo = await Album.findById(req.query.album).populate('artist');
           return res.send({tracks: tracksByAlbum, albumInfo: albumInfo});
         } else if (req.query.artist) {
-          const albums = await Album.find({"artist": req.query.artist, $or: [{addedBy: user._id}, {isPublished: true}]}).populate("artist");
+          const albums = await Album.find({
+            "artist": req.query.artist,
+            $or: [{addedBy: user._id}, {isPublished: true}]
+          }).populate("artist");
           const tracks = albums.map(album => album._id);
           const tracksByArtist = await Track.find({"album": {$in: tracks}});
           return res.send(tracksByArtist);
@@ -114,15 +120,25 @@ tracksRouter.patch('/:id/togglePublished', auth, permit('admin'), async (req, re
   }
 })
 
-tracksRouter.delete('/:id', auth, permit('admin'), async (req, res) => {
+tracksRouter.delete('/:id', auth, async (req, res) => {
   try {
+    const user = (req as RequestWithUser).user;
+
     const track = await Track.findById(req.params.id);
 
     if (!track) {
       return res.status(404).send({message: "Track not found"});
     }
 
-    await track.deleteOne();
+    if (user.role === "admin") {
+      await track.deleteOne();
+
+    }
+
+    if (user.role === "admin") {
+      await track.deleteOne({addedBy: user._id, isPublished: false});
+    }
+
     return res.send({message: "Deleted successfully"});
   } catch (e) {
     return res.status(500);
