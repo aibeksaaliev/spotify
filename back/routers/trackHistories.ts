@@ -22,7 +22,6 @@ trackHistoriesRouter.post('/', async (req, res, next) => {
     const trackHistory = new TrackHistory({
       user: user._id,
       track: req.body.track,
-      artist: req.body.artist,
       datetime: new Date(),
     });
 
