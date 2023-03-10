@@ -135,7 +135,7 @@ tracksRouter.delete('/:id', auth, async (req, res) => {
 
     }
 
-    if (user.role === "admin") {
+    if (user.role === "user") {
       await track.deleteOne({addedBy: user._id, isPublished: false});
     }
 
