@@ -8,7 +8,7 @@ import {selectUser} from "../../feauters/users/usersSlice";
 import {submitTrackHistory} from "../../feauters/trackHistory/trackHistoryThunks";
 import {getYouTubeUrl, selectTrackDeleteLoading, selectTrackPublishLoading} from "../../feauters/tracks/tracksSlice";
 import {LoadingButton} from "@mui/lab";
-import {deleteTrack, publishTrack} from "../../feauters/tracks/tracksThunks";
+import {deleteTrack, getAlbumTracks, publishTrack} from "../../feauters/tracks/tracksThunks";
 
 interface Props {
   track: TrackType;
@@ -27,10 +27,12 @@ const TrackCard: React.FC<Props> = ({track}) => {
 
   const togglePublish = async () => {
     await dispatch(publishTrack(track._id));
+    await dispatch(getAlbumTracks(track.album));
   };
 
   const removeTrack = async () => {
     await dispatch(deleteTrack(track._id));
+    await dispatch(getAlbumTracks(track.album));
   };
 
   let adminControllers = user?.role === "admin" && (

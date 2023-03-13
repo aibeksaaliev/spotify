@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {TrackMutation} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectTrackCreateError, selectTrackCreateLoading} from "../../feauters/tracks/tracksSlice";
-import {Grid, MenuItem, TextField} from "@mui/material";
+import {Grid, InputAdornment, MenuItem, TextField} from "@mui/material";
 import {LoadingButton} from "@mui/lab";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import {getArtists} from "../../feauters/artists/artistsThunks";
@@ -89,6 +89,7 @@ const TrackForm: React.FC<Props> = ({onSubmit}) => {
             value={track.album}
             onChange={inputChangeHandler}
             required
+            disabled={artist.length === 0}
             error={Boolean(getFieldError('album'))}
             helperText={getFieldError('album')}
           >
@@ -114,13 +115,24 @@ const TrackForm: React.FC<Props> = ({onSubmit}) => {
           <TextField
             label="Duration"
             name="duration"
-            type="time"
+            type="text"
             fullWidth
             value={track.duration}
             onChange={inputChangeHandler}
             required
             error={Boolean(getFieldError('duration'))}
             helperText={getFieldError('duration')}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">mm:ss</InputAdornment>,
+              inputProps: {
+                min: 0,
+                step: 1,
+                pattern: '[0-9]{0,2}:[0-5][0-9]',
+                inputMode: 'numeric',
+                style: { textAlign: 'center' }
+              },
+              type: 'text',
+            }}
           />
         </Grid>
         <Grid item xs>

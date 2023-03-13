@@ -8,7 +8,7 @@ import NoImageAvailable from "../../../src/assets/images/no_image_available.jpg"
 import {LoadingButton} from "@mui/lab";
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {selectUser} from "../../feauters/users/usersSlice";
-import {deleteAlbum, publishAlbum} from "../../feauters/albums/albumsThunks";
+import {deleteAlbum, getArtistAlbums, publishAlbum} from "../../feauters/albums/albumsThunks";
 import {selectAlbumDeleteLoading, selectAlbumPublishLoading} from "../../feauters/albums/albumsSlice";
 
 interface Props {
@@ -30,10 +30,12 @@ const AlbumCard: React.FC<Props> = ({album}) => {
 
   const togglePublish = async () => {
     await dispatch(publishAlbum(album._id));
+    await dispatch(getArtistAlbums(album.artist));
   };
 
   const removeAlbum = async () => {
     await dispatch(deleteAlbum(album._id));
+    await dispatch(getArtistAlbums(album.artist));
   };
 
   let adminControllers = user?.role === "admin" && (
@@ -77,13 +79,13 @@ const AlbumCard: React.FC<Props> = ({album}) => {
   return (
     <Grid item xs={12} sm={6} md={4}>
       <Card
-        sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+        sx={{height: '100%', display: 'flex', flexDirection: 'column'}}
       >
         <CardMedia
           component="img"
           image={image}
         />
-        <CardContent sx={{ flexGrow: 1 }}>
+        <CardContent sx={{flexGrow: 1}}>
           <Typography gutterBottom variant="h5" component="h2">
             {album.title}
           </Typography>

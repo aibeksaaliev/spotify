@@ -142,15 +142,19 @@ albumsRouter.delete('/:id', auth, async (req, res) => {
     }
 
     if (user.role === "admin") {
-      const coverPath = path.join(config.publicPath, album.cover as string);
-      await fs.unlink(coverPath);
+      if (album.cover) {
+        const coverPath = path.join(config.publicPath, album.cover as string);
+        await fs.unlink(coverPath);
+      }
       await Track.deleteMany({album: {$in: album}});
       await album.deleteOne();
     }
 
     if (user.role === "user") {
-      const coverPath = path.join(config.publicPath, album.cover as string);
-      await fs.unlink(coverPath);
+      if (album.cover) {
+        const coverPath = path.join(config.publicPath, album.cover as string);
+        await fs.unlink(coverPath);
+      }
       await Track.deleteMany({album: {$in: album}});
       await album.deleteOne({addedBy: user._id, isPublished: false});
     }
