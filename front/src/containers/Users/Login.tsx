@@ -7,6 +7,7 @@ import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {selectLoginError, selectLoginLoading} from '../../feauters/users/usersSlice';
 import {login} from '../../feauters/users/usersThunks';
 import {LoadingButton} from "@mui/lab";
+import {GoogleLogin} from "@react-oauth/google";
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -46,6 +47,17 @@ const Login = () => {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
+
+        <Box sx={{ pt: 2 }}>
+          <GoogleLogin
+            onSuccess={(credentialResponse) => {
+              console.log(credentialResponse);
+            }}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+          />
+        </Box>
 
         {error && (
           <Alert severity="error" sx={{mt: 3, width: "100%"}}>
