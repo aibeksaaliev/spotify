@@ -5,7 +5,7 @@ import {Alert, Avatar, Box, Container, Grid, Link, TextField, Typography} from '
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {selectLoginError, selectLoginLoading} from '../../feauters/users/usersSlice';
-import {login} from '../../feauters/users/usersThunks';
+import {googleLogin, login} from '../../feauters/users/usersThunks';
 import {LoadingButton} from "@mui/lab";
 import {GoogleLogin} from "@react-oauth/google";
 
@@ -31,6 +31,11 @@ const Login = () => {
     navigate('/');
   };
 
+  const googleLoginHandler = async (credential: string) => {
+    await dispatch(googleLogin(credential)).unwrap();
+    navigate('/');
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -51,7 +56,9 @@ const Login = () => {
         <Box sx={{ pt: 2 }}>
           <GoogleLogin
             onSuccess={(credentialResponse) => {
-              console.log(credentialResponse);
+              if (credentialResponse.credential) {
+                void googleLoginHandler(credentialResponse.credential);
+              }
             }}
             onError={() => {
               console.log('Login Failed');
