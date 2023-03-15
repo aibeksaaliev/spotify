@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { User } from '../../../types';
-import { Button, Menu, MenuItem } from '@mui/material';
+import React, {useState} from 'react';
+import {User} from '../../../types';
+import {Box, Button, Menu, MenuItem} from '@mui/material';
 import {useNavigate} from "react-router-dom";
 import {useAppDispatch} from "../../../app/hooks";
 import {logout} from "../../../feauters/users/usersThunks";
 import {getArtists} from "../../../feauters/artists/artistsThunks";
+import {Avatar} from "@mui/material";
+import {apiUrl} from "../../../constants";
 
 interface Props {
   user: User;
@@ -28,14 +30,27 @@ const UsersMenu: React.FC<Props> = ({user}) => {
     navigate('/');
   };
 
+  let avatar = "";
+
+  if (user.avatar) {
+    if (user.googleId) {
+      avatar = user.avatar;
+    } else {
+      avatar = apiUrl + user.avatar;
+    }
+  }
+
   return (
     <>
-      <Button
-        onClick={handleClick}
-        color="inherit"
-      >
-        Hello, {user.username}
-      </Button>
+      <Box sx={{display: "flex"}}>
+        <Button
+          onClick={handleClick}
+          color="inherit"
+        >
+          Hello, {user.displayName}
+        </Button>
+        <Avatar alt={user.displayName} src={avatar}/>
+      </Box>
       <Menu
         anchorEl={anchorEl}
         keepMounted
