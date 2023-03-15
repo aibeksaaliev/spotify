@@ -26,7 +26,20 @@ const albumCoversStorage = multer.diskStorage({
     const extension = path.extname(file.originalname);
     cb(null, 'covers/' + randomUUID() + extension);
   }
-})
+});
+
+const usersAvatarsStorage = multer.diskStorage({
+  destination: async (_req, _file, cb) => {
+    const destDir = path.join(config.publicPath, 'avatars');
+    await fs.mkdir(destDir, {recursive: true});
+    cb(null, config.publicPath);
+  },
+  filename: (_req, file, cb) => {
+    const extension = path.extname(file.originalname);
+    cb(null, 'avatars/' + randomUUID() + extension);
+  }
+});
 
 export const photosUpload = multer({storage: artistPhotosStorage});
 export const coversUpload = multer({storage: albumCoversStorage});
+export const avatarsUpload = multer({storage: usersAvatarsStorage});
