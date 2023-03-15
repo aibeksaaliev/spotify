@@ -69,6 +69,8 @@ export interface AlbumTracksType {
 export interface RegisterMutation {
   username: string;
   password: string;
+  displayName: string;
+  avatar: File | null;
 }
 
 export interface User {

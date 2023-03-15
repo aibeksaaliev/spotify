@@ -7,6 +7,7 @@ import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {selectRegisterError, selectRegisterLoading} from "../../feauters/users/usersSlice";
 import {register} from '../../feauters/users/usersThunks';
 import {LoadingButton} from "@mui/lab";
+import FileInput from "../../components/UI/FileInput/FileInput";
 
 const Register = () => {
   const dispatch = useAppDispatch();
@@ -17,11 +18,20 @@ const Register = () => {
   const [state, setState] = useState<RegisterMutation>({
     username: "",
     password: "",
+    displayName: "",
+    avatar: null
   });
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
     setState(prevState => ({...prevState, [name]: value}));
+  };
+
+  const fileInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {name, files} = e.target;
+    setState(prev => ({
+      ...prev, [name]: files && files[0] ? files[0] : null,
+    }));
   };
 
   const submitFormHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -85,6 +95,22 @@ const Register = () => {
                 error={Boolean(getFieldError('password'))}
                 helperText={getFieldError('password')}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                name="displayName"
+                label="Display Name"
+                type="displayName"
+                autoComplete="new-displayName"
+                value={state.displayName}
+                fullWidth
+                onChange={inputChangeHandler}
+                error={Boolean(getFieldError('displayName'))}
+                helperText={getFieldError('displayName')}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FileInput onChange={fileInputHandler} name="avatar" label="Avatar"/>
             </Grid>
           </Grid>
           <LoadingButton
