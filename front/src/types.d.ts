@@ -81,6 +81,7 @@ export interface User {
   displayName: string;
   avatar: string;
   googleId: string;
+  facebookId: string;
 }
 
 export interface RegisterResponse {

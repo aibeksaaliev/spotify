@@ -5,6 +5,7 @@ import {OAuth2Client} from "google-auth-library";
 import config from "../config";
 import * as crypto from "crypto";
 import {avatarsUpload} from "../multer";
+import axios from "axios";
 
 const usersRouter = express.Router();
 const client = new OAuth2Client(config.google.clientId);
@@ -68,6 +69,43 @@ usersRouter.post('/google', async (req, res, next) => {
     await user.save();
 
     return res.send({ message: "Login with Google successful!", user });
+  } catch (e) {
+    return next(e);
+  }
+});
+
+usersRouter.post('/facebook', async (req, res, next) => {
+  try {
+    const { accessToken, userID } = req.body;
+
+    if (!accessToken || !userID) {
+      return res.status(400).send({error: "Not enough user data to continue."});
+    }
+
+    const response = await axios.get(`https://graph.facebook.com/v12.0/${userID}?fields=name,email,picture&access_token=${accessToken}`);
+
+    const { name, email, picture } = response.data;
+
+    if (!email) {
+      return res.status(400).send({error: "Not enough user data to continue."});
+    }
+
+    let user = await User.findOne({facebookId: userID});
+
+    if (!user) {
+      user = new User({
+        username: email,
+        password: crypto.randomUUID(),
+        displayName: name,
+        avatar: picture?.data?.url,
+        facebookId: userID,
+      })
+    }
+
+    user.generateToken();
+    await user.save();
+
+    return res.send({ message: "Login with Facebook successful!", user });
   } catch (e) {
     return next(e);
   }

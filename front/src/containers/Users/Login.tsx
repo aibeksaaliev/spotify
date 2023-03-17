@@ -8,6 +8,7 @@ import {selectLoginError, selectLoginLoading} from '../../feauters/users/usersSl
 import {googleLogin, login} from '../../feauters/users/usersThunks';
 import {LoadingButton} from "@mui/lab";
 import {GoogleLogin} from "@react-oauth/google";
+import FacebookAuth from "../../components/FacebookAuth/FacebookAuth";
 
 const Login = () => {
   const dispatch = useAppDispatch();
@@ -64,6 +65,10 @@ const Login = () => {
               console.log('Login Failed');
             }}
           />
+        </Box>
+
+        <Box sx={{ pt: 2 }}>
+          <FacebookAuth/>
         </Box>
 
         {error && (

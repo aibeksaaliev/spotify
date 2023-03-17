@@ -33,7 +33,7 @@ const UsersMenu: React.FC<Props> = ({user}) => {
   let avatar = "";
 
   if (user.avatar) {
-    if (user.googleId) {
+    if (user.googleId || user.facebookId) {
       avatar = user.avatar;
     } else {
       avatar = apiUrl + user.avatar;

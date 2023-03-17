@@ -63,6 +63,21 @@ export const googleLogin = createAsyncThunk<User, string, {rejectValue: GlobalEr
   }
 );
 
+export const facebookLogin = createAsyncThunk<User, {accessToken: string, userID: string}, {rejectValue: GlobalError}>(
+  'users/facebookLogin',
+  async (facebook, {rejectWithValue}) => {
+    try {
+      const response = await axiosApi.post('/users/facebook', facebook);
+      return response.data.user;
+    } catch (e) {
+      if (isAxiosError(e) && e.response && e.response.status === 400) {
+        return rejectWithValue(e.response.data as GlobalError);
+      }
+      throw e;
+    }
+  }
+);
+
 export const logout = createAsyncThunk<void, void, {state: RootState}>(
   'users/logout',
   async (_, {dispatch}) => {
