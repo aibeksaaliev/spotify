@@ -6,10 +6,10 @@ import permit from "../middleware/permit";
 import config from "../config";
 import path from "path";
 import {promises as fs} from "fs";
-import access, {AnyRequest} from "../middleware/access";
 import Album from "../models/Album";
 import Track from "../models/Track";
 import mongoose from "mongoose";
+import User from "../models/User";
 
 const artistsRouter = express.Router();
 
@@ -35,9 +35,11 @@ artistsRouter.post('/', auth, photosUpload.single('photo'), async (req, res) => 
   }
 });
 
-artistsRouter.get('/', access, async (req, res) => {
+artistsRouter.get('/', async (req, res) => {
   try {
-    const user = (req as AnyRequest).user;
+    const token = req.get("Authorization");
+
+    const user = await User.findOne({token});
 
     if (!user) {
       const artists = await Artist.find({isPublished: true});

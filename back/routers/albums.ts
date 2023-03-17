@@ -8,8 +8,8 @@ import permit from "../middleware/permit";
 import path from "path";
 import config from "../config";
 import {promises as fs} from "fs";
-import access from "../middleware/access";
 import Track from "../models/Track";
+import User from "../models/User";
 
 const albumsRouter = express.Router();
 
@@ -36,9 +36,11 @@ albumsRouter.post('/', auth, coversUpload.single('cover'), async (req, res) => {
   }
 });
 
-albumsRouter.get('/', access, async (req, res) => {
+albumsRouter.get('/', async (req, res) => {
   try {
-    const user = (req as RequestWithUser).user;
+    const token = req.get("Authorization");
+
+    const user = await User.findOne({token});
 
     if (!user) {
       if (req.query.artist) {

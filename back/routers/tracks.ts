@@ -3,7 +3,7 @@ import Track from "../models/Track";
 import Album from "../models/Album";
 import auth, {RequestWithUser} from "../middleware/auth";
 import permit from "../middleware/permit";
-import access from "../middleware/access";
+import User from "../models/User";
 
 const tracksRouter = express.Router();
 
@@ -31,9 +31,11 @@ tracksRouter.post('/', auth, async (req, res) => {
   }
 });
 
-tracksRouter.get('/', access, async (req, res) => {
+tracksRouter.get('/', async (req, res) => {
   try {
-    const user = (req as RequestWithUser).user;
+    const token = req.get("Authorization");
+
+    const user = await User.findOne({token});
 
     if (!user) {
       if (req.query.album) {
