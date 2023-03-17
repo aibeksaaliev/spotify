@@ -24,7 +24,8 @@ const TrackForm: React.FC<Props> = ({onSubmit}) => {
     title: "",
     album: "",
     duration: "",
-    number: ""
+    number: "",
+    videoId: ""
   });
   const [artist, setArtist] = useState("");
 
@@ -146,6 +147,18 @@ const TrackForm: React.FC<Props> = ({onSubmit}) => {
             required
             error={Boolean(getFieldError('number'))}
             helperText={getFieldError('number')}
+          />
+        </Grid>
+        <Grid item xs>
+          <TextField
+            label="YouTube Video ID"
+            name="videoId"
+            type="videoId"
+            fullWidth
+            value={track.videoId}
+            onChange={inputChangeHandler}
+            error={Boolean(getFieldError('videoId'))}
+            helperText={getFieldError('videoId')}
           />
         </Grid>
         <Grid item xs sx={{textAlign: "center"}}>

@@ -38,6 +38,9 @@ const TrackCard: React.FC<Props> = ({track}) => {
   let adminControllers = user?.role === "admin" && (
     <>
       <LoadingButton
+        sx={{ml:1}}
+        variant="contained"
+        color="error"
         size="small"
         loading={deleteLoading}
         disabled={deleteLoading || publishLoading}
@@ -47,6 +50,9 @@ const TrackCard: React.FC<Props> = ({track}) => {
       </LoadingButton>
       {!track.isPublished &&
           <LoadingButton
+              sx={{ml:1}}
+              variant="contained"
+              color="success"
               size="small"
               loading={publishLoading}
               disabled={deleteLoading || publishLoading}
@@ -64,6 +70,8 @@ const TrackCard: React.FC<Props> = ({track}) => {
 
   let userControllers = user?.role === "user" && (user._id === track.addedBy && !track.isPublished && (
     <LoadingButton
+      variant="contained"
+      color="error"
       size="small"
       loading={deleteLoading}
       disabled={deleteLoading || publishLoading}
@@ -85,7 +93,7 @@ const TrackCard: React.FC<Props> = ({track}) => {
         {track.title}
       </ListItemText>
       <ListItemText sx={{textAlign: "right"}}>
-        <Typography sx={{display: "inline"}}>{publishInfo}</Typography>
+        <Typography sx={{display: "inline", mr: 1}}>{publishInfo}</Typography>
         {adminControllers}
         {userControllers}
         {user && (

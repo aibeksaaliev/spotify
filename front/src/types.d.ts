@@ -59,6 +59,7 @@ export interface TrackMutation {
   album: string;
   duration: string;
   number: string;
+  videoId: string;
 }
 
 export interface AlbumTracksType {

@@ -41,6 +41,8 @@ const ArtistCard: React.FC<Props> = ({artist}) => {
   let adminControllers = user?.role === "admin" && (
     <>
       <LoadingButton
+        variant="contained"
+        color="error"
         size="small"
         loading={deleteLoading}
         disabled={deleteLoading || publishLoading}
@@ -50,6 +52,8 @@ const ArtistCard: React.FC<Props> = ({artist}) => {
       </LoadingButton>
       {!artist.isPublished &&
           <LoadingButton
+              variant="contained"
+              color="success"
               loading={publishLoading}
               disabled={deleteLoading || publishLoading}
               size="small"
@@ -63,6 +67,8 @@ const ArtistCard: React.FC<Props> = ({artist}) => {
   let userControllers = user?.role === "user" && (
     user._id === artist.addedBy && !artist.isPublished && (
       <LoadingButton
+        variant="contained"
+        color="error"
         loading={deleteLoading}
         disabled={deleteLoading || publishLoading}
         size="small"
@@ -97,7 +103,7 @@ const ArtistCard: React.FC<Props> = ({artist}) => {
           </Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={() => navigate('/artists/' + artist._id)}>View</Button>
+          <Button variant="contained" size="small" onClick={() => navigate('/artists/' + artist._id)}>View</Button>
           {adminControllers}
           {userControllers}
         </CardActions>

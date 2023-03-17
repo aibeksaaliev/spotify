@@ -33,31 +33,33 @@ const Layout: React.FC<PropsWithChildren> = ({children}) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline/>
-      <AppBar position="relative">
-        <Toolbar sx={{display: "flex", justifyContent: "space-between"}}>
-          <Link to="/" style={{textDecoration: "none", color: "inherit", display: "flex", alignItems: "center"}}>
-          <AlbumIcon sx={{mr: 2}}/>
+      <div style={{display: "flex", flexDirection: "column", height: "100vh"}}>
+        <AppBar position="relative">
+          <Toolbar sx={{display: "flex", justifyContent: "space-between"}}>
+            <Link to="/" style={{textDecoration: "none", color: "inherit", display: "flex", alignItems: "center"}}>
+              <AlbumIcon sx={{mr: 2}}/>
               Spotify
-          </Link>
-          {user ? (<UsersMenu user={user}/>) : (<AnonymousMenu/>)}
-        </Toolbar>
-      </AppBar>
-      <main>
-        {children}
-      </main>
-      <Box sx={{bgcolor: 'background.paper', p: 6}} component="footer">
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="p"
-        >
-          Something here to give the footer a purpose!
-        </Typography>
-      </Box>
+            </Link>
+            {user ? (<UsersMenu user={user}/>) : (<AnonymousMenu/>)}
+          </Toolbar>
+        </AppBar>
+        <main style={{marginBottom: "auto"}}>
+          {children}
+        </main>
+        <Box sx={{bgcolor: 'background.paper', p: 6, marginTop: "auto"}} component="footer">
+          <Typography variant="h6" align="center" gutterBottom>
+            Footer
+          </Typography>
+          <Typography
+            variant="subtitle1"
+            align="center"
+            color="text.secondary"
+            component="p"
+          >
+            Something here to give the footer a purpose!
+          </Typography>
+        </Box>
+      </div>
     </ThemeProvider>
   );
 };

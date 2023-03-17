@@ -41,6 +41,8 @@ const AlbumCard: React.FC<Props> = ({album}) => {
   let adminControllers = user?.role === "admin" && (
     <>
       <LoadingButton
+        variant="contained"
+        color="error"
         loading={deleteLoading}
         disabled={deleteLoading || publishLoading}
         size="small"
@@ -50,6 +52,8 @@ const AlbumCard: React.FC<Props> = ({album}) => {
       </LoadingButton>
       {!album.isPublished &&
           <LoadingButton
+              variant="contained"
+              color="success"
               loading={publishLoading}
               disabled={deleteLoading || publishLoading}
               size="small"
@@ -67,6 +71,8 @@ const AlbumCard: React.FC<Props> = ({album}) => {
 
   let userControllers = user?.role === "user" && (user._id === album.addedBy && !album.isPublished && (
     <LoadingButton
+      variant="contained"
+      color="error"
       loading={deleteLoading}
       disabled={deleteLoading || publishLoading}
       size="small"
@@ -94,7 +100,12 @@ const AlbumCard: React.FC<Props> = ({album}) => {
           <Typography>{publishInfo}</Typography>
         </CardContent>
         <CardActions>
-          <Button size="small" onClick={() => navigate('/albums/' + album._id)}>View</Button>
+          <Button variant="contained"
+                  size="small"
+                  onClick={() => navigate('/albums/' + album._id)}
+          >
+            View
+          </Button>
           {adminControllers}
           {userControllers}
         </CardActions>
