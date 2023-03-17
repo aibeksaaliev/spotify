@@ -99,7 +99,7 @@ artistsRouter.delete('/:id', auth, async (req, res) => {
       await artist.deleteOne();
     }
 
-    if (user.role === "user") {
+    if (user.role === "user" && user._id.equals(artist.addedBy as unknown as string)) {
       if (artist.photo) {
         const photoPath = path.join(config.publicPath, artist.photo as string);
         await fs.unlink(photoPath);

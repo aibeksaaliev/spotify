@@ -152,7 +152,7 @@ albumsRouter.delete('/:id', auth, async (req, res) => {
       await album.deleteOne();
     }
 
-    if (user.role === "user") {
+    if (user.role === "user" && user._id.equals(album.addedBy as unknown as string)) {
       if (album.cover) {
         const coverPath = path.join(config.publicPath, album.cover as string);
         await fs.unlink(coverPath);
